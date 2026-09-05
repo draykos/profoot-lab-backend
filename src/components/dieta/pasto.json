@@ -1,0 +1,40 @@
+{
+  "collectionName": "components_dieta_pasti",
+  "info": {
+    "displayName": "Pasto",
+    "description": "Un pasto del piano alimentare: orario, tipo, descrizione e valori nutrizionali."
+  },
+  "options": {},
+  "attributes": {
+    "orario": {
+      "type": "time",
+      "required": true
+    },
+    "tipo": {
+      "type": "enumeration",
+      "enum": ["colazione", "spuntino", "pranzo", "pre_allenamento", "cena"],
+      "required": true
+    },
+    "descrizione": {
+      "type": "text",
+      "required": true
+    },
+    "kcal": {
+      "type": "integer",
+      "required": true,
+      "min": 0
+    },
+    "carboidratiG": {
+      "type": "integer",
+      "min": 0
+    },
+    "proteineG": {
+      "type": "integer",
+      "min": 0
+    },
+    "grassiG": {
+      "type": "integer",
+      "min": 0
+    }
+  }
+}

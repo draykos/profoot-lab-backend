@@ -443,6 +443,514 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAllenamentoAllenamento extends Struct.CollectionTypeSchema {
+  collectionName: 'allenamenti';
+  info: {
+    description: 'Sessione video di allenamento assegnata a un singolo atleta per un giorno specifico.';
+    displayName: 'Allenamento';
+    pluralName: 'allenamenti';
+    singularName: 'allenamento';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    atleta: Schema.Attribute.Relation<'manyToOne', 'api::atleta.atleta'>;
+    categoria: Schema.Attribute.Enumeration<
+      [
+        'forza',
+        'attivazione',
+        'defaticamento',
+        'velocita',
+        'core',
+        'condizionamento',
+        'recupero',
+      ]
+    >;
+    copertina: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    data: Schema.Attribute.Date & Schema.Attribute.Required;
+    descrizione: Schema.Attribute.Text;
+    durataMinuti: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+    intensita: Schema.Attribute.Enumeration<['alta', 'media', 'bassa']>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::allenamento.allenamento'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    titolo: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    video: Schema.Attribute.Media<'videos'>;
+  };
+}
+
+export interface ApiAtletaAtleta extends Struct.CollectionTypeSchema {
+  collectionName: 'atleti';
+  info: {
+    description: "Profilo del calciatore, collegato 1-1 all'utente di autenticazione.";
+    displayName: 'Atleta';
+    pluralName: 'atleti';
+    singularName: 'atleta';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    allenamenti: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::allenamento.allenamento'
+    >;
+    altezzaCm: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 250;
+          min: 100;
+        },
+        number
+      >;
+    avatar: Schema.Attribute.Media<'images'>;
+    cognome: Schema.Attribute.String & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    dataNascita: Schema.Attribute.Date;
+    highlights: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::highlight.highlight'
+    >;
+    infortuni: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::infortunio.infortunio'
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::atleta.atleta'
+    > &
+      Schema.Attribute.Private;
+    nome: Schema.Attribute.String & Schema.Attribute.Required;
+    numeroMaglia: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 99;
+          min: 1;
+        },
+        number
+      >;
+    pesoKg: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 150;
+          min: 30;
+        },
+        number
+      >;
+    pianiAlimentari: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::piano-alimentare.piano-alimentare'
+    >;
+    piedePreferito: Schema.Attribute.Enumeration<
+      ['destro', 'sinistro', 'ambidestro']
+    >;
+    proStatus: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    publishedAt: Schema.Attribute.DateTime;
+    ruolo: Schema.Attribute.Enumeration<
+      ['portiere', 'difensore', 'centrocampista', 'attaccante']
+    >;
+    squadra: Schema.Attribute.Relation<'manyToOne', 'api::squadra.squadra'>;
+    testFisici: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::test-fisico.test-fisico'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiHighlightHighlight extends Struct.CollectionTypeSchema {
+  collectionName: 'highlights';
+  info: {
+    description: 'Clip video di un atleta dalle partite: gol, assist, azioni difensive.';
+    displayName: 'Highlight';
+    pluralName: 'highlights';
+    singularName: 'highlight';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    atleta: Schema.Attribute.Relation<'manyToOne', 'api::atleta.atleta'>;
+    avversario: Schema.Attribute.Relation<'manyToOne', 'api::squadra.squadra'>;
+    clip: Schema.Attribute.Media<'videos'> & Schema.Attribute.Required;
+    copertina: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    data: Schema.Attribute.Date & Schema.Attribute.Required;
+    durataSecondi: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    inEvidenza: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::highlight.highlight'
+    > &
+      Schema.Attribute.Private;
+    partita: Schema.Attribute.Relation<'manyToOne', 'api::partita.partita'>;
+    publishedAt: Schema.Attribute.DateTime;
+    tipo: Schema.Attribute.Enumeration<
+      ['gol', 'assist', 'azione_difensiva', 'dribbling', 'parata']
+    >;
+    titolo: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiInfortunioInfortunio extends Struct.CollectionTypeSchema {
+  collectionName: 'infortuni';
+  info: {
+    description: 'Zona anatomica con un problema fisico di un atleta, posizionata sulla mappa corporea.';
+    displayName: 'Infortunio';
+    pluralName: 'infortuni';
+    singularName: 'infortunio';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    atleta: Schema.Attribute.Relation<'manyToOne', 'api::atleta.atleta'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    dataInsorgenza: Schema.Attribute.Date & Schema.Attribute.Required;
+    dataRisoluzione: Schema.Attribute.Date;
+    diagnosi: Schema.Attribute.String;
+    gravita: Schema.Attribute.Enumeration<['alert', 'warn', 'ok']> &
+      Schema.Attribute.Required;
+    indicazioni: Schema.Attribute.Text;
+    lato: Schema.Attribute.Enumeration<['sinistro', 'destro', 'centrale']>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::infortunio.infortunio'
+    > &
+      Schema.Attribute.Private;
+    posizioneLeft: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 100;
+          min: 0;
+        },
+        number
+      >;
+    posizioneTop: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 100;
+          min: 0;
+        },
+        number
+      >;
+    publishedAt: Schema.Attribute.DateTime;
+    stato: Schema.Attribute.Enumeration<['attivo', 'in_recupero', 'risolto']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'attivo'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    vista: Schema.Attribute.Enumeration<['fronte', 'retro']> &
+      Schema.Attribute.Required;
+    zona: Schema.Attribute.Enumeration<
+      [
+        'testa_collo',
+        'spalla',
+        'gomito',
+        'polso_mano',
+        'torace',
+        'addome',
+        'lombare',
+        'anca',
+        'flessore_anca',
+        'adduttori',
+        'quadricipite',
+        'ischiocrurale',
+        'ginocchio',
+        'polpaccio',
+        'tendine_achilleo',
+        'caviglia',
+        'piede',
+      ]
+    > &
+      Schema.Attribute.Required;
+  };
+}
+
+export interface ApiModuloMentalCoachModuloMentalCoach
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'moduli_mental_coach';
+  info: {
+    description: 'Contenuto guidato di preparazione mentale: respirazione, visualizzazione, recupero.';
+    displayName: 'Modulo mental coach';
+    pluralName: 'moduli-mental-coach';
+    singularName: 'modulo-mental-coach';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    audio: Schema.Attribute.Media<'audios'>;
+    categoria: Schema.Attribute.Enumeration<
+      ['pre_partita', 'focus', 'sonno', 'stress', 'recupero']
+    >;
+    copertina: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    descrizione: Schema.Attribute.Text;
+    durataMinuti: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::modulo-mental-coach.modulo-mental-coach'
+    > &
+      Schema.Attribute.Private;
+    ordine: Schema.Attribute.Integer;
+    publishedAt: Schema.Attribute.DateTime;
+    titolo: Schema.Attribute.String & Schema.Attribute.Required;
+    trascrizione: Schema.Attribute.RichText;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    video: Schema.Attribute.Media<'videos'>;
+  };
+}
+
+export interface ApiPartitaPartita extends Struct.CollectionTypeSchema {
+  collectionName: 'partite';
+  info: {
+    description: 'Incontro del calendario: avversari, data/ora, stadio, competizione.';
+    displayName: 'Partita';
+    pluralName: 'partite';
+    singularName: 'partita';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    competizione: Schema.Attribute.Enumeration<
+      ['serie_a', 'champions', 'coppa_italia', 'amichevole']
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    dataOra: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    golCasa: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    golTrasferta: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::partita.partita'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    squadraCasa: Schema.Attribute.Relation<'manyToOne', 'api::squadra.squadra'>;
+    squadraTrasferta: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::squadra.squadra'
+    >;
+    stadio: Schema.Attribute.String;
+    stato: Schema.Attribute.Enumeration<
+      ['in_programma', 'giocata', 'rinviata']
+    > &
+      Schema.Attribute.DefaultTo<'in_programma'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPianoAlimentarePianoAlimentare
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'piani_alimentari';
+  info: {
+    description: 'Piano nutrizionale di un atleta: obiettivo calorico, target macro e lista pasti.';
+    displayName: 'Piano alimentare';
+    pluralName: 'piani-alimentari';
+    singularName: 'piano-alimentare';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    atleta: Schema.Attribute.Relation<'manyToOne', 'api::atleta.atleta'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::piano-alimentare.piano-alimentare'
+    > &
+      Schema.Attribute.Private;
+    note: Schema.Attribute.Text;
+    obiettivoKcal: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    pasti: Schema.Attribute.Component<'dieta.pasto', true>;
+    publishedAt: Schema.Attribute.DateTime;
+    targetCarboidratiG: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    targetGrassiG: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    targetProteineG: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    validoAl: Schema.Attribute.Date;
+    validoDal: Schema.Attribute.Date & Schema.Attribute.Required;
+  };
+}
+
+export interface ApiSquadraSquadra extends Struct.CollectionTypeSchema {
+  collectionName: 'squadre';
+  info: {
+    description: "Anagrafica di una squadra: quella dell'atleta o un'avversaria nel calendario partite.";
+    displayName: 'Squadra';
+    pluralName: 'squadre';
+    singularName: 'squadra';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    atleti: Schema.Attribute.Relation<'oneToMany', 'api::atleta.atleta'>;
+    citta: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    isMiaSquadra: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::squadra.squadra'
+    > &
+      Schema.Attribute.Private;
+    logo: Schema.Attribute.Media<'images'>;
+    nome: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    nomeBreve: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    stadio: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTestFisicoTestFisico extends Struct.CollectionTypeSchema {
+  collectionName: 'test_fisici';
+  info: {
+    description: 'Singola misurazione di un test di valutazione fisica di un atleta.';
+    displayName: 'Test fisico';
+    pluralName: 'test-fisici';
+    singularName: 'test-fisico';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    atleta: Schema.Attribute.Relation<'manyToOne', 'api::atleta.atleta'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    data: Schema.Attribute.Date & Schema.Attribute.Required;
+    direzioneMigliora: Schema.Attribute.Enumeration<['su', 'giu']>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::test-fisico.test-fisico'
+    > &
+      Schema.Attribute.Private;
+    note: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    tipo: Schema.Attribute.Enumeration<
+      ['squat_jump', 'cmj', 'sprint_20m', 'sprint_30m', 'yoyo_ir1', 'illinois']
+    > &
+      Schema.Attribute.Required;
+    unita: Schema.Attribute.Enumeration<['cm', 's', 'm']> &
+      Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    valore: Schema.Attribute.Decimal & Schema.Attribute.Required;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -954,6 +1462,15 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::allenamento.allenamento': ApiAllenamentoAllenamento;
+      'api::atleta.atleta': ApiAtletaAtleta;
+      'api::highlight.highlight': ApiHighlightHighlight;
+      'api::infortunio.infortunio': ApiInfortunioInfortunio;
+      'api::modulo-mental-coach.modulo-mental-coach': ApiModuloMentalCoachModuloMentalCoach;
+      'api::partita.partita': ApiPartitaPartita;
+      'api::piano-alimentare.piano-alimentare': ApiPianoAlimentarePianoAlimentare;
+      'api::squadra.squadra': ApiSquadraSquadra;
+      'api::test-fisico.test-fisico': ApiTestFisicoTestFisico;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

@@ -129,3 +129,7 @@ dist
 build
 .strapi-updater.json
 .strapi-cloud.json
+
+# local secrets (never commit)
+_secret.md
+**/_secret.md

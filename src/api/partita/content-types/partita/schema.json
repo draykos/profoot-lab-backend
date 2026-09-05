@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "partite",
+  "info": {
+    "singularName": "partita",
+    "pluralName": "partite",
+    "displayName": "Partita",
+    "description": "Incontro del calendario: avversari, data/ora, stadio, competizione."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "squadraCasa": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::squadra.squadra"
+    },
+    "squadraTrasferta": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::squadra.squadra"
+    },
+    "dataOra": {
+      "type": "datetime",
+      "required": true
+    },
+    "stadio": {
+      "type": "string"
+    },
+    "competizione": {
+      "type": "enumeration",
+      "enum": ["serie_a", "champions", "coppa_italia", "amichevole"]
+    },
+    "stato": {
+      "type": "enumeration",
+      "enum": ["in_programma", "giocata", "rinviata"],
+      "default": "in_programma"
+    },
+    "golCasa": {
+      "type": "integer",
+      "min": 0
+    },
+    "golTrasferta": {
+      "type": "integer",
+      "min": 0
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "kind": "collectionType",
+  "collectionName": "atleti",
+  "info": {
+    "singularName": "atleta",
+    "pluralName": "atleti",
+    "displayName": "Atleta",
+    "description": "Profilo del calciatore, collegato 1-1 all'utente di autenticazione."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "nome": {
+      "type": "string",
+      "required": true
+    },
+    "cognome": {
+      "type": "string",
+      "required": true
+    },
+    "dataNascita": {
+      "type": "date"
+    },
+    "ruolo": {
+      "type": "enumeration",
+      "enum": ["portiere", "difensore", "centrocampista", "attaccante"]
+    },
+    "altezzaCm": {
+      "type": "integer",
+      "min": 100,
+      "max": 250
+    },
+    "pesoKg": {
+      "type": "decimal",
+      "min": 30,
+      "max": 150
+    },
+    "piedePreferito": {
+      "type": "enumeration",
+      "enum": ["destro", "sinistro", "ambidestro"]
+    },
+    "numeroMaglia": {
+      "type": "integer",
+      "min": 1,
+      "max": 99
+    },
+    "proStatus": {
+      "type": "boolean",
+      "default": true
+    },
+    "avatar": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "squadra": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::squadra.squadra",
+      "inversedBy": "atleti"
+    },
+    "allenamenti": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::allenamento.allenamento",
+      "mappedBy": "atleta"
+    },
+    "testFisici": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::test-fisico.test-fisico",
+      "mappedBy": "atleta"
+    },
+    "infortuni": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::infortunio.infortunio",
+      "mappedBy": "atleta"
+    },
+    "pianiAlimentari": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::piano-alimentare.piano-alimentare",
+      "mappedBy": "atleta"
+    },
+    "highlights": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::highlight.highlight",
+      "mappedBy": "atleta"
+    }
+  }
+}

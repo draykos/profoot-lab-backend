@@ -1,0 +1,47 @@
+{
+  "kind": "collectionType",
+  "collectionName": "test_fisici",
+  "info": {
+    "singularName": "test-fisico",
+    "pluralName": "test-fisici",
+    "displayName": "Test fisico",
+    "description": "Singola misurazione di un test di valutazione fisica di un atleta."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "atleta": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::atleta.atleta",
+      "inversedBy": "testFisici"
+    },
+    "tipo": {
+      "type": "enumeration",
+      "enum": ["squat_jump", "cmj", "sprint_20m", "sprint_30m", "yoyo_ir1", "illinois"],
+      "required": true
+    },
+    "valore": {
+      "type": "decimal",
+      "required": true
+    },
+    "unita": {
+      "type": "enumeration",
+      "enum": ["cm", "s", "m"],
+      "required": true
+    },
+    "data": {
+      "type": "date",
+      "required": true
+    },
+    "note": {
+      "type": "text"
+    },
+    "direzioneMigliora": {
+      "type": "enumeration",
+      "enum": ["su", "giu"]
+    }
+  }
+}

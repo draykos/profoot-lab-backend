@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "piani_alimentari",
+  "info": {
+    "singularName": "piano-alimentare",
+    "pluralName": "piani-alimentari",
+    "displayName": "Piano alimentare",
+    "description": "Piano nutrizionale di un atleta: obiettivo calorico, target macro e lista pasti."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "atleta": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::atleta.atleta",
+      "inversedBy": "pianiAlimentari"
+    },
+    "validoDal": {
+      "type": "date",
+      "required": true
+    },
+    "validoAl": {
+      "type": "date"
+    },
+    "obiettivoKcal": {
+      "type": "integer",
+      "min": 0
+    },
+    "targetCarboidratiG": {
+      "type": "integer",
+      "min": 0
+    },
+    "targetProteineG": {
+      "type": "integer",
+      "min": 0
+    },
+    "targetGrassiG": {
+      "type": "integer",
+      "min": 0
+    },
+    "note": {
+      "type": "text"
+    },
+    "pasti": {
+      "type": "component",
+      "component": "dieta.pasto",
+      "repeatable": true
+    }
+  }
+}

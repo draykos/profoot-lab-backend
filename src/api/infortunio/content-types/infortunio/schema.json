@@ -1,0 +1,90 @@
+{
+  "kind": "collectionType",
+  "collectionName": "infortuni",
+  "info": {
+    "singularName": "infortunio",
+    "pluralName": "infortuni",
+    "displayName": "Infortunio",
+    "description": "Zona anatomica con un problema fisico di un atleta, posizionata sulla mappa corporea."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "atleta": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::atleta.atleta",
+      "inversedBy": "infortuni"
+    },
+    "zona": {
+      "type": "enumeration",
+      "enum": [
+        "testa_collo",
+        "spalla",
+        "gomito",
+        "polso_mano",
+        "torace",
+        "addome",
+        "lombare",
+        "anca",
+        "flessore_anca",
+        "adduttori",
+        "quadricipite",
+        "ischiocrurale",
+        "ginocchio",
+        "polpaccio",
+        "tendine_achilleo",
+        "caviglia",
+        "piede"
+      ],
+      "required": true
+    },
+    "lato": {
+      "type": "enumeration",
+      "enum": ["sinistro", "destro", "centrale"]
+    },
+    "vista": {
+      "type": "enumeration",
+      "enum": ["fronte", "retro"],
+      "required": true
+    },
+    "posizioneTop": {
+      "type": "decimal",
+      "required": true,
+      "min": 0,
+      "max": 100
+    },
+    "posizioneLeft": {
+      "type": "decimal",
+      "required": true,
+      "min": 0,
+      "max": 100
+    },
+    "gravita": {
+      "type": "enumeration",
+      "enum": ["alert", "warn", "ok"],
+      "required": true
+    },
+    "stato": {
+      "type": "enumeration",
+      "enum": ["attivo", "in_recupero", "risolto"],
+      "required": true,
+      "default": "attivo"
+    },
+    "diagnosi": {
+      "type": "string"
+    },
+    "indicazioni": {
+      "type": "text"
+    },
+    "dataInsorgenza": {
+      "type": "date",
+      "required": true
+    },
+    "dataRisoluzione": {
+      "type": "date"
+    }
+  }
+}
