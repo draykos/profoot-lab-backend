@@ -28,7 +28,7 @@ file.
 | 5 | Test fisico | [test-fisico.md](test-fisico.md) | collection | ✅ | `/test` |
 | 6 | Infortunio | [infortunio.md](infortunio.md) | collection | ✅ | `/body`, `/` (alert corpo) |
 | 7 | Partita | [partita.md](partita.md) | collection | ✅ | `/matches`, `/` (prossima partita) |
-| 8 | Modulo mental coach | [modulo-mental-coach.md](modulo-mental-coach.md) | collection | ✅ | `/mental` |
+| 8 | Video Coach | [video-coach.md](video-coach.md) | collection | ✅ | `/mental` |
 | 9 | Highlight | [highlight.md](highlight.md) | collection | ✅ | `/highlights` |
 | 10 | Membro staff | [membro-staff.md](membro-staff.md) | collection | 📝 (opzionale) | `/training`, `/mental` (attribuzioni) |
 
@@ -49,14 +49,15 @@ conseguenza.
 
 Strapi **non ha row-level security**. Dare a un ruolo il permesso `find` su un content-type espone
 **tutte** le righe. Per i dati privati del singolo atleta (`piano-alimentare`, `test-fisico`,
-`infortunio`, `highlight`, e il profilo `atleta`) serve **una delle seguenti**:
+`infortunio`, `highlight`, `video-coach`, e il profilo `atleta`) serve **una delle
+seguenti**:
 
 - una **policy** / middleware che forza `filters[atleta][user][id] = ctx.state.user.id`;
 - un **controller custom** che sovrascrive `find`/`findOne`;
 - servire tutto tramite `GET /api/users/me?populate=...` (l'atleta legge solo il proprio grafo).
 
-Per i **cataloghi condivisi** (`modulo-mental-coach`, `partita`, `squadra`) il permesso
-`find`/`findOne` semplice è sufficiente.
+Per i **cataloghi condivisi** (`partita`, `squadra`) il permesso `find`/`findOne` semplice è
+sufficiente.
 
 Ogni file indica nella sezione *Isolamento* se il content-type è privato o condiviso.
 
@@ -64,8 +65,9 @@ Ogni file indica nella sezione *Isolamento* se il content-type è privato o cond
 per il ruolo Atleta — solo un'azione custom self-scoped `me` (`GET /api/<content-type>/me`) che
 risolve l'atleta dall'utente autenticato via `strapi.service('api::atleta.atleta').findForUser(userId)`
 e filtra lato server. `allenamento` è il primo caso reale (il piano è per singolo atleta, non
-condiviso); lo stesso pattern si applica quando si creano `test-fisico`, `infortunio`,
-`piano-alimentare`, `highlight`.
+condiviso); lo stesso pattern si applica a `test-fisico`, `infortunio`, `piano-alimentare`,
+`highlight` e `video-coach` (rivisto il 2026-09-07: da catalogo condiviso a per-atleta, poi
+rinominato da `modulo-mental-coach`).
 
 ### 3. Relazione con l'utente
 
@@ -76,7 +78,7 @@ all'entità utente: l'utente resta solo per auth. Tutti gli altri content-type p
 
 ### 4. Draft & Publish
 
-- **Attivo** per i cataloghi curati dallo staff: `allenamento`, `modulo-mental-coach`, `highlight`.
+- **Attivo** per i cataloghi curati dallo staff: `allenamento`, `video-coach`, `highlight`.
 - **Disattivo** per i dati-misura e i record clinici, dove non ha senso una bozza: `test-fisico`,
   `infortunio`, `piano-alimentare` (valutare).
 
@@ -109,7 +111,7 @@ read-only), salvo eccezioni annotate.
 6. `infortunio` — sblocca `/body` e l'alert in dashboard
 7. `piano-alimentare` — sblocca `/diet`
 8. `highlight` — sblocca `/highlights`
-9. `modulo-mental-coach` — sblocca `/mental`
+9. `video-coach` — sblocca `/mental`
 10. `membro-staff` — opzionale, rifinitura attribuzioni
 
 ## Changelog
@@ -133,3 +135,17 @@ read-only), salvo eccezioni annotate.
 
   **9 content-type su 10 completati.** Resta solo `membro-staff` (opzionale, da valutare se serve
   davvero o se un campo stringa basta — vedi il file).
+
+- **2026-09-07** — **revisione + rinomina `modulo-mental-coach` → `video-coach`** ("Video Coach"):
+  da catalogo condiviso a contenuto **privato per atleta** (un video al giorno per ogni atleta).
+  Rimossi `descrizione`, `trascrizione`, `ordine`, `audio`; aggiunti `data` (obbligatorio) e la
+  relazione `atleta` ↔ `atleta.videoCoach`. `video` è un **URL** (`string`, required, regex
+  `^https?://[^\s]+$`). Endpoint `GET /api/video-coach/me` (ordina per `data` desc, scoping per atleta),
+  stesso pattern di `allenamento`/`test-fisico`. UID `api::video-coach.video-coach`, tabella
+  `video_coach`. Doc: `video-coach.md`. **Da fare a mano:** pulizia di permessi/config/tabelle
+  orfane (`modulo-mental-coach` / `moduli_mental_coach`), reimpostare `mainField` della relazione
+  `atleta` su `video-coach`, riavviare il dev server.
+
+  **Aggiunto `atleta.nomeCompleto`** (string, required, manuale) come Entry title dell'atleta;
+  `mainField` impostato su `nomeCompleto` per `atleta` e per la relazione `atleta` di tutti i
+  content-type che la referenziano (config `strapi_core_store_settings`).

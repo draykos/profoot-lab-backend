@@ -17,6 +17,7 @@
 | `user` | relation oneToOne → `plugin::users-permissions.user` | **one-way**, non `required` | `required` non ancora forzato: dipende dal flusso di creazione (vedi decisioni aperte) |
 | `nome` | string | required | — |
 | `cognome` | string | required | — |
+| `nomeCompleto` | string | **required** | ✅ aggiunto il 2026-09-07: compilato **a mano** (nessun hook), è l'**Entry title** dell'atleta — il valore mostrato e cercato nelle tendine di relazione degli altri content-type |
 | `dataNascita` | date | — | — |
 | `ruolo` | enumeration | `portiere` \| `difensore` \| `centrocampista` \| `attaccante` | enum piatto (deciso) |
 | `altezzaCm` | integer | min 100 / max 250 | aggiunta validazione |
@@ -31,6 +32,25 @@
 | `infortuni` | relation oneToMany → `api::infortunio.infortunio` | — | ✅ reverse della relazione su `infortunio` |
 | `pianiAlimentari` | relation oneToMany → `api::piano-alimentare.piano-alimentare` | — | ✅ reverse della relazione su `piano-alimentare` |
 | `highlights` | relation oneToMany → `api::highlight.highlight` | — | ✅ reverse della relazione su `highlight` |
+| `videoCoach` | relation oneToMany → `api::video-coach.video-coach` | — | ✅ reverse della relazione su `video-coach` (aggiunta il 2026-09-07) |
+
+### Entry title = `nomeCompleto` (2026-09-07)
+
+Nelle tendine di relazione l'admin Strapi mostra e cerca **un solo campo** del target (`mainField`) e
+non sa concatenare `nome` + `cognome`. Scelta: campo dedicato **`nomeCompleto`** (string, required),
+compilato a mano dallo staff alla creazione dell'atleta. Nessun lifecycle hook.
+
+**Impostato il 2026-09-07** via update diretto su `strapi_core_store_settings` (config admin, non
+schema — **non versionabile su file**, va rifatto se si resetta il DB):
+
+- `api::atleta.atleta` → `settings.mainField` = `nomeCompleto`, `settings.defaultSortBy` =
+  `nomeCompleto`
+- `allenamento`, `test-fisico`, `infortunio`, `piano-alimentare`, `highlight`, `video-coach`
+  → `metadatas.atleta.edit.mainField` = `nomeCompleto`
+  (fatto su `modulo-mental-coach` prima della rinomina — **da rifare su `video-coach`**)
+
+In alternativa si rifà da Content Manager → *Configure the view*. Dopo la modifica serve un **riavvio
+del dev server** per svuotare la cache del core store.
 
 ### Service condiviso `findForUser`
 
@@ -82,7 +102,7 @@ sportivi, e fa da hub per tutti i dati privati (test, infortuni, dieta, highligh
 - `user` ← 1‑1 con `plugin::users-permissions.user`
 - `squadra` → manyToOne
 - reverse (definite dagli altri content-type): `testFisici`, `infortuni`, `pianiAlimentari`,
-  `highlights`, eventuali `allenamenti`
+  `highlights`, `videoCoach`, eventuali `allenamenti`
 
 ## Isolamento
 
@@ -149,6 +169,12 @@ permesso). Non ancora testato con un JWT reale (nessun `atleta` collegato a `Tes
   `user` `required`, endpoint `me`, policy di ownership, seed permessi.
 - **2026-09-05** — collegata la relazione `allenamenti` (reverse di `allenamento.atleta`) e
   aggiunto il service condiviso `findForUser`, riusato da `allenamento.me`.
+- **2026-09-07** — aggiunto il campo `nomeCompleto` (string, **required**, compilato a mano) come
+  Entry title dell'atleta, usato nelle ricerche delle tendine di relazione degli altri content-type.
+  `mainField` / `defaultSortBy` impostati su `nomeCompleto` sul content-type `atleta` e
+  `metadatas.atleta.edit.mainField` sui 6 content-type che referenziano `atleta` — via update diretto
+  su `strapi_core_store_settings` (config admin, non su file). Il record di test esistente era già
+  stato cancellato. Richiede un riavvio del dev server.
 - **2026-09-05** — chiuse le decisioni rimandate (vedi sopra). Creato l'endpoint `GET /api/atleta/me`
   e il seed permessi in `bootstrap()`. Bug in corso d'opera: `this.sanitizeOutput`/
   `this.transformResponse` nella firma a oggetto del controller danno errore TS

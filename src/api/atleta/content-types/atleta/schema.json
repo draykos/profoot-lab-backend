@@ -25,6 +25,10 @@
       "type": "string",
       "required": true
     },
+    "nomeCompleto": {
+      "type": "string",
+      "required": true
+    },
     "dataNascita": {
       "type": "date"
     },
@@ -94,6 +98,12 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::highlight.highlight",
+      "mappedBy": "atleta"
+    },
+    "videoCoach": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::video-coach.video-coach",
       "mappedBy": "atleta"
     }
   }

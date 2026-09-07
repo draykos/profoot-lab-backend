@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "video_coach",
+  "info": {
+    "singularName": "video-coach",
+    "pluralName": "video-coaches",
+    "displayName": "Video Coach",
+    "description": "Video coach assegnato a un singolo atleta per un giorno specifico (uno al giorno)."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "atleta": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::atleta.atleta",
+      "inversedBy": "videoCoach"
+    },
+    "titolo": {
+      "type": "string",
+      "required": true
+    },
+    "categoria": {
+      "type": "enumeration",
+      "enum": ["pre_partita", "focus", "sonno", "stress", "recupero"]
+    },
+    "durataMinuti": {
+      "type": "integer",
+      "min": 1
+    },
+    "data": {
+      "type": "date",
+      "required": true
+    },
+    "video": {
+      "type": "string",
+      "required": true,
+      "regex": "^https?://[^\\s]+$"
+    },
+    "copertina": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

@@ -34,10 +34,9 @@ const ATLETA_ACTIONS = [
   // highlight: dato privato per singolo atleta — solo `me`
   // (vedi docs/content-types/highlight.md)
   'api::highlight.highlight.me',
-  // modulo-mental-coach: catalogo condiviso, sola lettura
-  // (vedi docs/content-types/modulo-mental-coach.md)
-  'api::modulo-mental-coach.modulo-mental-coach.find',
-  'api::modulo-mental-coach.modulo-mental-coach.findOne',
+  // video-coach: video coach per singolo atleta (uno al giorno), dato privato —
+  // solo l'azione self-scoped `me` (vedi docs/content-types/video-coach.md)
+  'api::video-coach.video-coach.me',
 ];
 
 async function ensureAtletaPermissions({ strapi }: { strapi: Core.Strapi }) {

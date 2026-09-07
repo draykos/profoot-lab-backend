@@ -4,8 +4,8 @@
 
 ## Scopo
 
-Anagrafica dello staff tecnico citato nei contenuti (coach di un video, autore di un modulo mental
-coach). Utile solo per attribuire e mostrare "con Coach Marco".
+Anagrafica dello staff tecnico citato nei contenuti (coach di un video di allenamento, autore di un
+video coach). Utile solo per attribuire e mostrare "con Coach Marco".
 
 ## Schermate / mock di riferimento
 
@@ -32,7 +32,7 @@ coach). Utile solo per attribuire e mostrare "con Coach Marco".
 ## Relazioni
 
 - reverse da `api::allenamento.allenamento` (`coach`)
-- reverse da `api::modulo-mental-coach.modulo-mental-coach` (`autore`)
+- reverse da `api::video-coach.video-coach` (`autore`)
 
 ## Isolamento
 

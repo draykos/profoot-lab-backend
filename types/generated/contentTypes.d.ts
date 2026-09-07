@@ -541,6 +541,7 @@ export interface ApiAtletaAtleta extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     nome: Schema.Attribute.String & Schema.Attribute.Required;
+    nomeCompleto: Schema.Attribute.String & Schema.Attribute.Required;
     numeroMaglia: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
         {
@@ -580,6 +581,10 @@ export interface ApiAtletaAtleta extends Struct.CollectionTypeSchema {
     user: Schema.Attribute.Relation<
       'oneToOne',
       'plugin::users-permissions.user'
+    >;
+    videoCoach: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::video-coach.video-coach'
     >;
   };
 }
@@ -708,52 +713,6 @@ export interface ApiInfortunioInfortunio extends Struct.CollectionTypeSchema {
       ]
     > &
       Schema.Attribute.Required;
-  };
-}
-
-export interface ApiModuloMentalCoachModuloMentalCoach
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'moduli_mental_coach';
-  info: {
-    description: 'Contenuto guidato di preparazione mentale: respirazione, visualizzazione, recupero.';
-    displayName: 'Modulo mental coach';
-    pluralName: 'moduli-mental-coach';
-    singularName: 'modulo-mental-coach';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    audio: Schema.Attribute.Media<'audios'>;
-    categoria: Schema.Attribute.Enumeration<
-      ['pre_partita', 'focus', 'sonno', 'stress', 'recupero']
-    >;
-    copertina: Schema.Attribute.Media<'images'>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    descrizione: Schema.Attribute.Text;
-    durataMinuti: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 1;
-        },
-        number
-      >;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::modulo-mental-coach.modulo-mental-coach'
-    > &
-      Schema.Attribute.Private;
-    ordine: Schema.Attribute.Integer;
-    publishedAt: Schema.Attribute.DateTime;
-    titolo: Schema.Attribute.String & Schema.Attribute.Required;
-    trascrizione: Schema.Attribute.RichText;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    video: Schema.Attribute.Media<'videos'>;
   };
 }
 
@@ -948,6 +907,49 @@ export interface ApiTestFisicoTestFisico extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     valore: Schema.Attribute.Decimal & Schema.Attribute.Required;
+  };
+}
+
+export interface ApiVideoCoachVideoCoach extends Struct.CollectionTypeSchema {
+  collectionName: 'video_coach';
+  info: {
+    description: 'Video coach assegnato a un singolo atleta per un giorno specifico (uno al giorno).';
+    displayName: 'Video Coach';
+    pluralName: 'video-coaches';
+    singularName: 'video-coach';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    atleta: Schema.Attribute.Relation<'manyToOne', 'api::atleta.atleta'>;
+    categoria: Schema.Attribute.Enumeration<
+      ['pre_partita', 'focus', 'sonno', 'stress', 'recupero']
+    >;
+    copertina: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    data: Schema.Attribute.Date & Schema.Attribute.Required;
+    durataMinuti: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::video-coach.video-coach'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    titolo: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    video: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -1466,11 +1468,11 @@ declare module '@strapi/strapi' {
       'api::atleta.atleta': ApiAtletaAtleta;
       'api::highlight.highlight': ApiHighlightHighlight;
       'api::infortunio.infortunio': ApiInfortunioInfortunio;
-      'api::modulo-mental-coach.modulo-mental-coach': ApiModuloMentalCoachModuloMentalCoach;
       'api::partita.partita': ApiPartitaPartita;
       'api::piano-alimentare.piano-alimentare': ApiPianoAlimentarePianoAlimentare;
       'api::squadra.squadra': ApiSquadraSquadra;
       'api::test-fisico.test-fisico': ApiTestFisicoTestFisico;
+      'api::video-coach.video-coach': ApiVideoCoachVideoCoach;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
