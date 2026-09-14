@@ -9,9 +9,11 @@ export default factories.createCoreController('api::video-coach.video-coach', ({
    * GET /api/video-coach/me
    *
    * Video coach assegnati all'atleta collegato all'utente autenticato, dal più recente (c'è un
-   * video al giorno). Il contenuto è per singolo atleta: nessun filtro/populate arbitrario
-   * accettato dal client, lo scoping è sempre sull'atleta della richiesta corrente (per questo il
-   * ruolo Atleta non ha `find`/`findOne` su questo content-type, solo questa azione).
+   * video al giorno), limitati agli ultimi 15 (limit fisso lato server — Document Service API,
+   * non la query REST `pagination[limit]`, quindi non richiedibile dal client). Il contenuto è
+   * per singolo atleta: nessun filtro/populate/limite arbitrario accettato dal client, lo scoping
+   * è sempre sull'atleta della richiesta corrente (per questo il ruolo Atleta non ha `find`/
+   * `findOne` su questo content-type, solo questa azione).
    */
   async me(ctx) {
     const userId = ctx.state.user?.id;
@@ -28,6 +30,7 @@ export default factories.createCoreController('api::video-coach.video-coach', ({
       filters: { atleta: { id: atleta.id } },
       sort: { data: 'desc' },
       populate: { copertina: true },
+      limit: 15,
     });
 
     const contentType = strapi.contentType('api::video-coach.video-coach');
