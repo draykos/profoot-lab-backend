@@ -28,9 +28,9 @@ file.
 | 5 | Test fisico | [test-fisico.md](test-fisico.md) | collection | ✅ | `/test` |
 | 6 | Infortunio | [infortunio.md](infortunio.md) | collection | ✅ | `/body`, `/` (alert corpo) |
 | 7 | Partita | [partita.md](partita.md) | collection | ✅ | `/matches`, `/` (prossima partita) |
-| 8 | Video Coach | [video-coach.md](video-coach.md) | collection | ✅ | `/mental` |
+| 8 | Video Coach | [video-coach.md](video-coach.md) | collection | ✅ | `/video-coach` |
 | 9 | Highlight | [highlight.md](highlight.md) | collection | ✅ | `/highlights` |
-| 10 | Membro staff | [membro-staff.md](membro-staff.md) | collection | 📝 (opzionale) | `/training`, `/mental` (attribuzioni) |
+| 10 | Membro staff | [membro-staff.md](membro-staff.md) | collection | 📝 (opzionale) | `/training`, `/video-coach` (attribuzioni) |
 
 La **dashboard** (`/`) non ha un content-type dedicato: è un'aggregazione di *Allenamento* (di oggi),
 *Partita* (prossima) e *Infortunio* (stato attivo). Vedi note in fondo.
@@ -111,7 +111,7 @@ read-only), salvo eccezioni annotate.
 6. `infortunio` — sblocca `/body` e l'alert in dashboard
 7. `piano-alimentare` — sblocca `/diet`
 8. `highlight` — sblocca `/highlights`
-9. `video-coach` — sblocca `/mental`
+9. `video-coach` — sblocca `/video-coach`
 10. `membro-staff` — opzionale, rifinitura attribuzioni
 
 ## Changelog
