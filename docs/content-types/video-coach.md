@@ -1,6 +1,6 @@
 # Video Coach
 
-**Stato:** ✅ Creato · 🔄 rivisto il 2026-09-07
+**Stato:** ✅ Creato · 🔄 rivisto il 2026-09-14
 
 > Ex **"Modulo mental coach"**. Rinominato in `video-coach` (UID, tabella, rotte, relazione) il
 > 2026-09-07: "modulo" non descriveva più "un video al giorno". Vedi Changelog.
@@ -23,8 +23,9 @@
 `src/api/video-coach/routes/video-coach-me.ts`. Stesso pattern di `allenamento.me` /
 `test-fisico.me`: risolve l'atleta dall'utente autenticato via
 `strapi.service('api::atleta.atleta').findForUser(userId)`, filtra per `atleta.id`, ordina per `data`
-**discendente** (il video di oggi in cima), popola `copertina`. Nessun altro filtro/populate accettato
-dal client.
+**discendente** (il video di oggi in cima), popola `copertina`, **limitato ai 15 più recenti**
+(`limit: 15` fisso lato server, Document Service API — non richiedibile dal client). Nessun altro
+filtro/populate/limite accettato dal client.
 
 Permessi seedati in `bootstrap()`: solo `api::video-coach.video-coach.me` per il ruolo Atleta —
 **niente `find`/`findOne`** (dato privato per atleta).
@@ -54,16 +55,13 @@ il watcher ricarica uno schema prima dell'altro e il dev server va giù. Fix: ri
 ## Scopo
 
 Un video di preparazione mentale al giorno, assegnato dallo staff al singolo atleta (respirazione,
-visualizzazione, recupero, gestione dello stress). La sezione frontend `/mental` è ancora "in arrivo"
-(placeholder), ma il modello dati è pronto a sostituire il mock.
+visualizzazione, recupero, gestione dello stress). La sezione frontend è reale, in
+`profoot-lab-frontend/src/routes/video-coach.tsx` (ex `/mental`), non più un placeholder.
 
 ## Schermate / mock di riferimento
 
-- `profoot-lab-frontend/src/routes/mental.tsx`:
-  - `m1` "Respirazione 4-7-8" — "5 min · Pre-partita"
-  - `m2` "Visualizzazione dell'azione" — "8 min · Focus"
-  - `m3` "Recupero mentale notturno" — "12 min · Sonno"
-  - stato UI: "Sezione in fase di sviluppo — presto disponibile"
+- `profoot-lab-frontend/src/routes/video-coach.tsx` (ex `mental.tsx`), sezione reale dal 2026-09-14 —
+  vedi lo spec di design nel repo frontend per il dettaglio di UI/copy aggiornati
 - categorie viste: Pre-partita, Focus, Sonno
 
 ## UID e kind
@@ -120,7 +118,9 @@ server. Niente `find`/`findOne` per il ruolo Atleta.
   composto nativamente: validazione in un lifecycle hook `beforeCreate`/`beforeUpdate` se serve.
 - `categoria` / `durataMinuti` tenuti opzionali dai mock — confermare che servano davvero.
 - Serve tracciare completamento / preferiti / streak dell'atleta?
-- La sezione resta "coming soon" nel frontend finché non ci sono video pubblicati per l'atleta?
+- ~~La sezione resta "coming soon" nel frontend finché non ci sono video pubblicati per l'atleta?~~
+  — **chiuso: sezione reale, con empty state dedicato**, vedi
+  `profoot-lab-frontend/docs/superpowers/specs/2026-09-14-video-coach-design.md` (2026-09-14).
 
 ## Changelog
 
@@ -136,3 +136,7 @@ server. Niente `find`/`findOne` per il ruolo Atleta.
   `mainField` di `atleta` su `video-coach` gestiti in automatico da Strapi al boot / via core store.
 - **2026-09-07** — `video` è un **URL con validazione** (`string`, required, regex
   `^https?://[^\s]+$`). Va richiesta a schema, quindi solo un riavvio del dev server per applicarla.
+- **2026-09-14** — implementata la sezione frontend reale (`/video-coach`, ex `/mental`): video del
+  giorno in home, lista degli ultimi 7 video idonei (oggi o passati, mai futuri), player in una
+  modale Bunny Stream. Endpoint `me` limitato ai 15 risultati più recenti (`limit: 15`, Document
+  Service API). Vedi lo spec di design nel repo frontend.
