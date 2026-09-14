@@ -4,6 +4,12 @@
 
 > Ex **"Modulo mental coach"**. Rinominato in `video-coach` (UID, tabella, rotte, relazione) il
 > 2026-09-07: "modulo" non descriveva più "un video al giorno". Vedi Changelog.
+>
+> **2026-09-14 — revert lato frontend:** la sezione `/mental` (placeholder "in arrivo") resta
+> nell'app e **non** è stata sostituita da questa entità. I video di `video-coach` sono mostrati
+> in `/training` (video del giorno + storico), oltre che nella card home. Lo schema, l'endpoint
+> `me` e i permessi restano quelli descritti in questo file — solo la schermata di destinazione nel
+> frontend è cambiata. Vedi Changelog.
 
 ## Schema reale creato
 
@@ -55,13 +61,17 @@ il watcher ricarica uno schema prima dell'altro e il dev server va giù. Fix: ri
 ## Scopo
 
 Un video di preparazione mentale al giorno, assegnato dallo staff al singolo atleta (respirazione,
-visualizzazione, recupero, gestione dello stress). La sezione frontend è reale, in
-`profoot-lab-frontend/src/routes/video-coach.tsx` (ex `/mental`), non più un placeholder.
+visualizzazione, recupero, gestione dello stress). **La sezione `/mental` resta un placeholder
+work-in-progress** (non consuma questa entità); i video sono mostrati in `/training`.
 
 ## Schermate / mock di riferimento
 
-- `profoot-lab-frontend/src/routes/video-coach.tsx` (ex `mental.tsx`), sezione reale dal 2026-09-14 —
-  vedi lo spec di design nel repo frontend per il dettaglio di UI/copy aggiornati
+- `profoot-lab-frontend/src/routes/training.tsx` — video di oggi in evidenza + storico ultimi 7
+  giorni idonei, player in modale. Sezione reale dal 2026-09-14 — vedi lo spec di design nel repo
+  frontend per il dettaglio di UI/copy aggiornati
+- `profoot-lab-frontend/src/routes/index.tsx` — card "video del giorno" in home
+- `profoot-lab-frontend/src/routes/mental.tsx` — placeholder "Mental coach", invariato, non legato
+  a questa entità
 - categorie viste: Pre-partita, Focus, Sonno
 
 ## UID e kind
@@ -124,6 +134,14 @@ server. Niente `find`/`findOne` per il ruolo Atleta.
 
 ## Changelog
 
+- **2026-09-14** — **revert lato frontend**: `/mental` ripristinata come placeholder
+  work-in-progress (identica alla versione pre-2026-09-14); la sezione `/video-coach` è stata
+  rimossa e i video di questa entità sono ora mostrati in `/training` (video di oggi + storico) e
+  nella card "video del giorno" in home. Nessuna modifica allo schema/endpoint/permessi. Durante
+  la verifica: le 3 righe di test in `video_coach` avevano tutte `data` nel futuro (15/16
+  settembre contro un "oggi" del 14) — per questo non comparivano né in home né altrove, per
+  design (`visibleVideos` non mostra mai video futuri). Non è un bug applicativo: correggere le
+  date dal pannello admin di Strapi per vederle comparire.
 - **2026-09-04** — proposta iniziale dai mock di `mental.tsx` (come "Modulo mental coach").
 - **2026-09-05** — creato lo schema `api::modulo-mental-coach.modulo-mental-coach` come catalogo
   condiviso.
