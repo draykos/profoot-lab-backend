@@ -94,6 +94,14 @@ Immagini/video passano dal plugin `upload` (config in `config/plugins.ts`: SVG e
 vietati). I campi media nei file sotto usano il tipo `media` (single o multiple). Per i video lunghi
 valutare un campo `url` verso un hosting esterno invece dell'upload diretto.
 
+**Provider di storage (dal 2026-09-17):** `upload.config.provider` è `@nexide/strapi-provider-bunny`
+— i file vanno su una storage zone Bunny.net (stesse env var `BUNNY_*` in `.env` locale e nelle env
+var di Render), non più sul filesystem locale del container. Motivo: il filesystem di Render è
+effimero (nessun `disk:` in `render.yaml`), quindi i file caricati in produzione venivano persi ad
+ogni deploy; usare la stessa storage zone per localhost e produzione tiene anche i due ambienti
+allineati. CSP aggiornata in `config/middlewares.ts` (`img-src`/`media-src`) per permettere il pull
+zone Bunny nell'admin. Vedi Changelog.
+
 ### 6. i18n
 
 Il frontend ha `it` (default) ed `en` ma **tutte le stringhe UI sono statiche** in
@@ -155,3 +163,11 @@ read-only), salvo eccezioni annotate.
   **Aggiunto `atleta.nomeCompleto`** (string, required, manuale) come Entry title dell'atleta;
   `mainField` impostato su `nomeCompleto` per `atleta` e per la relazione `atleta` di tutti i
   content-type che la referenziano (config `strapi_core_store_settings`).
+
+- **2026-09-17** — provider upload cambiato da `local` (default) a **Bunny.net**
+  (`@nexide/strapi-provider-bunny`) — vedi sezione *5. Media* sopra. Causa: i 2 file già presenti in
+  Media Library erano spariti in produzione dopo un deploy (filesystem Render effimero, nessun
+  `disk:` configurato). Da fare a mano prima del prossimo deploy: creare/riusare una storage zone
+  Bunny.net e impostare `BUNNY_API_KEY`, `BUNNY_STORAGE_ZONE`, `BUNNY_HOSTNAME`, `BUNNY_PULL_ZONE`
+  (e opzionale `BUNNY_UPLOAD_PATH`) sia in `.env` locale sia nelle env var del servizio Render, poi
+  ricaricare a mano dall'admin i 2 file persi.
