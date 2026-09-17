@@ -1,9 +1,24 @@
 import type { Core } from '@strapi/strapi';
 
+const bunnyPullZone = process.env.BUNNY_PULL_ZONE;
+
 const config: Core.Config.Middlewares = [
   'strapi::logger',
   'strapi::errors',
-  'strapi::security',
+  {
+    name: 'strapi::security',
+    config: {
+      contentSecurityPolicy: {
+        useDefaults: true,
+        directives: {
+          'connect-src': ["'self'", 'https:'],
+          'img-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', bunnyPullZone],
+          'media-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io', bunnyPullZone],
+          upgradeInsecureRequests: null,
+        },
+      },
+    },
+  },
   'strapi::cors',
   'strapi::poweredBy',
   'strapi::query',
