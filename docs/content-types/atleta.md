@@ -143,9 +143,9 @@ ad *Atleta*).
 
 `GET /api/atleta/me` (autenticato) — `src/api/atleta/controllers/atleta.ts` +
 `src/api/atleta/routes/atleta-me.ts`. Filtra per `user.id` lato server (nessun filtro accettato dal
-client), popola `avatar`, sanitizza con `strapi.contentAPI.sanitize.output`. 404 se l'utente non ha
-un `atleta` collegato. Path scelto apposta diverso da `/api/atleti/:id` per non competere con la
-rotta core.
+client), popola `avatar` e `squadra` (solo campo `nome`), sanitizza con
+`strapi.contentAPI.sanitize.output`. 404 se l'utente non ha un `atleta` collegato. Path scelto
+apposta diverso da `/api/atleti/:id` per non competere con la rotta core.
 
 Permessi seedati in `bootstrap()` (`src/index.ts`, idempotente, gira a ogni avvio):
 `plugin::users-permissions.user.me` e `api::atleta.atleta.me` sul ruolo `atleta`. Verificato via
@@ -182,3 +182,5 @@ permesso). Non ancora testato con un JWT reale (nessun `atleta` collegato a `Tes
   `strapi.contentAPI.sanitize.output` invece che dai metodi ereditati dal core controller. L'errore
   di compilazione ha fatto cadere temporaneamente il dev server; è stato individuato e corretto, il
   server è tornato su da solo (autoReload) senza bisogno di restart manuale.
+- **2026-09-14** — `GET /api/atleta/me` ora popola anche `squadra` (solo `nome`) oltre ad `avatar`,
+  per la pagina profilo del frontend (ruolo + squadra). Collegata `/profile` ai dati reali.
