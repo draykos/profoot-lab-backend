@@ -11,7 +11,10 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Server =>
   },
   // Trust X-Forwarded-* headers from Render's reverse proxy, so secure/httpOnly
   // session cookies are set correctly even though TLS is terminated upstream.
-  proxy: env.bool('IS_PROXIED', false),
+  // Koa reads this from the nested `koa` key, not from `server.proxy` directly.
+  proxy: {
+    koa: env.bool('IS_PROXIED', false),
+  },
 });
 
 export default config;
