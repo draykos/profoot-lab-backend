@@ -16,6 +16,9 @@
 - `posizioneTop`/`posizioneLeft` **restano per-infortunio** (non derivate da `zona`) — vedi
   decisioni ancora aperte sotto, indipendente dalla scelta sull'enum.
 - `stato` con `default: "attivo"`.
+- **2026-09-14:** rimosso il campo `gravita` (era ridondante con `stato`). Il colore
+  (`alert`/`warn`/`ok`) è ora derivato lato frontend da `stato`
+  (`attivo`→alert, `in_recupero`→warn, `risolto`→ok), nessun campo dedicato nello schema.
 
 ## Endpoint creato
 
@@ -67,15 +70,11 @@ dashboard.
 | `vista` | enumeration | sì | `fronte`, `retro` — su quale immagine mostrare il pin |
 | `posizioneTop` | decimal | sì | percentuale 0–100 |
 | `posizioneLeft` | decimal | sì | percentuale 0–100 |
-| `gravita` | enumeration | sì | `alert` (grave/attivo), `warn` (attenzione), `ok` (risolto) — guida il colore |
-| `stato` | enumeration | sì | `attivo`, `in_recupero`, `risolto` |
+| `stato` | enumeration | sì | `attivo`, `in_recupero`, `risolto` — guida anche il colore lato frontend (`attivo`→alert/rosso, `in_recupero`→warn/giallo, `risolto`→ok/verde) |
 | `diagnosi` | string | no | "Distorsione grado I" |
 | `indicazioni` | text | no | testo mostrato nel dettaglio |
 | `dataInsorgenza` | date | sì | `date` nel mock |
 | `dataRisoluzione` | date | no | valorizzata quando `stato = risolto` |
-
-`gravita` e `stato` sono correlati ma non identici (il mock li tiene separati: `severity` guida il
-colore, `statusKey` l'etichetta). Valutare se derivare `gravita` da `stato` + un flag.
 
 ## Relazioni
 
@@ -109,3 +108,5 @@ ownership obbligatorio; considerare accesso anche per lo staff medico (ruolo ded
 - **2026-09-05** — creato lo schema `api::infortunio.infortunio` (decisione chiusa: enum `zona`
   fisso, 17 valori). Creato l'endpoint `me` (con filtro opzionale `?stato=`) e seedato il permesso
   per il ruolo Atleta.
+- **2026-09-14** — rimosso il campo `gravita`, ridondante con `stato`: il colore è ora derivato dal
+  frontend a partire da `stato` (`attivo`→alert, `in_recupero`→warn, `risolto`→ok).

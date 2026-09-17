@@ -62,11 +62,6 @@
       "min": 0,
       "max": 100
     },
-    "gravita": {
-      "type": "enumeration",
-      "enum": ["alert", "warn", "ok"],
-      "required": true
-    },
     "stato": {
       "type": "enumeration",
       "enum": ["attivo", "in_recupero", "risolto"],

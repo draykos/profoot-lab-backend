@@ -654,8 +654,6 @@ export interface ApiInfortunioInfortunio extends Struct.CollectionTypeSchema {
     dataInsorgenza: Schema.Attribute.Date & Schema.Attribute.Required;
     dataRisoluzione: Schema.Attribute.Date;
     diagnosi: Schema.Attribute.String;
-    gravita: Schema.Attribute.Enumeration<['alert', 'warn', 'ok']> &
-      Schema.Attribute.Required;
     indicazioni: Schema.Attribute.Text;
     lato: Schema.Attribute.Enumeration<['sinistro', 'destro', 'centrale']>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
