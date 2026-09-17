@@ -9,6 +9,9 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Server =>
   webhooks: {
     populateRelations: env.bool('WEBHOOKS_POPULATE_RELATIONS', false),
   },
+  // Trust X-Forwarded-* headers from Render's reverse proxy, so secure/httpOnly
+  // session cookies are set correctly even though TLS is terminated upstream.
+  proxy: env.bool('IS_PROXIED', false),
 });
 
 export default config;
