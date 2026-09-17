@@ -1,0 +1,29 @@
+meta {
+  name: Login (atleta1)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/auth/local
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "identifier": "atleta1@fake.com",
+    "password": "password"
+  }
+}
+
+script:post-response {
+  if (res.status === 200) {
+    bru.setVar("token", res.body.jwt);
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
