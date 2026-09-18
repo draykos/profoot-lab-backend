@@ -43,7 +43,7 @@ async function ensureAtletaPermissions({ strapi }: { strapi: Core.Strapi }) {
 
   if (!role) {
     strapi.log.warn(
-      `[bootstrap] Ruolo "${ATLETA_ROLE_TYPE}" non trovato: salto il seed dei permessi.`
+      `[bootstrap] Ruolo "${ATLETA_ROLE_TYPE}" non trovato: salto il seed dei permessi.`,
     );
     return;
   }
@@ -82,4 +82,3 @@ export default {
     await ensureAtletaPermissions({ strapi });
   },
 };
-

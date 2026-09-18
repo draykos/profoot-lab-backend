@@ -39,5 +39,5 @@ export default factories.createCoreController(
 
       ctx.body = { data: sanitized };
     },
-  })
+  }),
 );
