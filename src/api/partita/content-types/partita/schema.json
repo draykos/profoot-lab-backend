@@ -13,14 +13,10 @@
   "pluginOptions": {},
   "attributes": {
     "squadraCasa": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::squadra.squadra"
+      "type": "string"
     },
     "squadraTrasferta": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::squadra.squadra"
+      "type": "string"
     },
     "dataOra": {
       "type": "datetime",

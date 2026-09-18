@@ -65,10 +65,7 @@
       "allowedTypes": ["images"]
     },
     "squadra": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::squadra.squadra",
-      "inversedBy": "atleti"
+      "type": "string"
     },
     "allenamenti": {
       "type": "relation",
