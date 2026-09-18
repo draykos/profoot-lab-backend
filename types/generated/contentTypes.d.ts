@@ -570,7 +570,7 @@ export interface ApiAtletaAtleta extends Struct.CollectionTypeSchema {
     ruolo: Schema.Attribute.Enumeration<
       ['portiere', 'difensore', 'centrocampista', 'attaccante']
     >;
-    squadra: Schema.Attribute.Relation<'manyToOne', 'api::squadra.squadra'>;
+    squadra: Schema.Attribute.String;
     testFisici: Schema.Attribute.Relation<
       'oneToMany',
       'api::test-fisico.test-fisico'
@@ -602,7 +602,7 @@ export interface ApiHighlightHighlight extends Struct.CollectionTypeSchema {
   };
   attributes: {
     atleta: Schema.Attribute.Relation<'manyToOne', 'api::atleta.atleta'>;
-    avversario: Schema.Attribute.Relation<'manyToOne', 'api::squadra.squadra'>;
+    avversario: Schema.Attribute.String;
     clip: Schema.Attribute.Media<'videos'> & Schema.Attribute.Required;
     copertina: Schema.Attribute.Media<'images'>;
     createdAt: Schema.Attribute.DateTime;
@@ -754,11 +754,8 @@ export interface ApiPartitaPartita extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    squadraCasa: Schema.Attribute.Relation<'manyToOne', 'api::squadra.squadra'>;
-    squadraTrasferta: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::squadra.squadra'
-    >;
+    squadraCasa: Schema.Attribute.String;
+    squadraTrasferta: Schema.Attribute.String;
     stadio: Schema.Attribute.String;
     stato: Schema.Attribute.Enumeration<
       ['in_programma', 'giocata', 'rinviata']
@@ -829,43 +826,6 @@ export interface ApiPianoAlimentarePianoAlimentare
       Schema.Attribute.Private;
     validoAl: Schema.Attribute.Date;
     validoDal: Schema.Attribute.Date & Schema.Attribute.Required;
-  };
-}
-
-export interface ApiSquadraSquadra extends Struct.CollectionTypeSchema {
-  collectionName: 'squadre';
-  info: {
-    description: "Anagrafica di una squadra: quella dell'atleta o un'avversaria nel calendario partite.";
-    displayName: 'Squadra';
-    pluralName: 'squadre';
-    singularName: 'squadra';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    atleti: Schema.Attribute.Relation<'oneToMany', 'api::atleta.atleta'>;
-    citta: Schema.Attribute.String;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    isMiaSquadra: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::squadra.squadra'
-    > &
-      Schema.Attribute.Private;
-    logo: Schema.Attribute.Media<'images'>;
-    nome: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
-    nomeBreve: Schema.Attribute.String;
-    publishedAt: Schema.Attribute.DateTime;
-    stadio: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
   };
 }
 
@@ -1468,7 +1428,6 @@ declare module '@strapi/strapi' {
       'api::infortunio.infortunio': ApiInfortunioInfortunio;
       'api::partita.partita': ApiPartitaPartita;
       'api::piano-alimentare.piano-alimentare': ApiPianoAlimentarePianoAlimentare;
-      'api::squadra.squadra': ApiSquadraSquadra;
       'api::test-fisico.test-fisico': ApiTestFisicoTestFisico;
       'api::video-coach.video-coach': ApiVideoCoachVideoCoach;
       'plugin::content-releases.release': PluginContentReleasesRelease;

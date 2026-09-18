@@ -1,0 +1,8 @@
+node_modules
+dist
+.strapi
+.cache
+.tmp
+package-lock.json
+types/generated
+public/uploads
