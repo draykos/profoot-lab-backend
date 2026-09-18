@@ -22,7 +22,7 @@ file.
 | # | Content-type | File | Kind | Stato | Schermate frontend alimentate |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Atleta | [atleta.md](atleta.md) | collection | ✅ | `/profile`, header di ogni schermata, `/` |
-| 2 | Squadra | [squadra.md](squadra.md) | collection | ✅ | `/matches`, `/profile` |
+| 2 | ~~Squadra~~ | [squadra.md](squadra.md) | collection | ❌ rimosso | vedi nota² |
 | 3 | Allenamento | [allenamento.md](allenamento.md) | collection | ✅ | `/training`, `/` (video del giorno) |
 | 4 | Piano alimentare | [piano-alimentare.md](piano-alimentare.md) | collection | ✅ | `/diet`, `/` (riepilogo kcal) |
 | 5 | Test fisico | [test-fisico.md](test-fisico.md) | collection | ✅ | `/test` |
@@ -37,6 +37,10 @@ video di `video-coach` alimentano `/training`, la stessa route pianificata per `
 3). Le due entità coesistono con schemi diversi e nessuna delle due è stata rimossa; va deciso se
 consolidarle o tenerle separate (es. `video-coach` per il singolo video assegnato, `allenamento` per
 un piano più strutturato). Vedi `video-coach.md` → Changelog.
+
+² **Nota 2026-09-18:** `Squadra` rimosso — vedi `squadra.md` → Changelog. `atleta.squadra`,
+`partita.squadraCasa`/`squadraTrasferta` e `highlight.avversario` sono ora campi `string` liberi
+invece di relazioni.
 
 La **dashboard** (`/`) non ha un content-type dedicato: è un'aggregazione di *Allenamento* (di oggi),
 *Partita* (prossima) e *Infortunio* (stato attivo). Vedi note in fondo.
@@ -62,8 +66,7 @@ seguenti**:
 - un **controller custom** che sovrascrive `find`/`findOne`;
 - servire tutto tramite `GET /api/users/me?populate=...` (l'atleta legge solo il proprio grafo).
 
-Per i **cataloghi condivisi** (`partita`, `squadra`) il permesso `find`/`findOne` semplice è
-sufficiente.
+Per i **cataloghi condivisi** (`partita`) il permesso `find`/`findOne` semplice è sufficiente.
 
 Ogni file indica nella sezione *Isolamento* se il content-type è privato o condiviso.
 
@@ -125,7 +128,7 @@ read-only), salvo eccezioni annotate.
 ## Ordine di implementazione consigliato
 
 1. `atleta` (+ relazione con user) — base per tutto il resto
-2. `squadra` — referenziata da `atleta` e `partita`
+2. ~~`squadra`~~ — rimosso il 2026-09-18, vedi nota²
 3. `partita` — semplice, nessun dato privato
 4. `allenamento` — sblocca `/training` e il video del giorno in dashboard
 5. `test-fisico` — sblocca `/test`
@@ -185,3 +188,9 @@ read-only), salvo eccezioni annotate.
   per ambiente con `BUNNY_UPLOAD_PATH` (`localhost` in dev, `production` su Render), per evitare che
   upload di test locali finiscano mescolati con quelli reali nello stesso "namespace". Da fare a
   mano: ricaricare dall'admin di produzione i file mancanti (i 2 originali + eventuali altri persi).
+
+- **2026-09-18** — **rimosso `squadra`** (`api::squadra.squadra`). Era referenziato da
+  `atleta.squadra`, `partita.squadraCasa`/`squadraTrasferta` e `highlight.avversario`, ma solo
+  `atleta.squadra.nome` era effettivamente consumato dal frontend (`/profile`); gli altri due erano
+  ancora mock a stringhe. Dati in DB trascurabili. Le tre relazioni sono diventate campi `string`
+  liberi. Vedi `squadra.md` → Changelog per il dettaglio.

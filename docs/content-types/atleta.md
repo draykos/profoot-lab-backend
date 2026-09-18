@@ -1,7 +1,7 @@
 # Atleta
 
-**Stato:** ✅ Creato — schema, endpoint `me`, permessi Atleta seedati, relazioni `squadra` e
-`allenamenti` collegate
+**Stato:** ✅ Creato — schema, endpoint `me`, permessi Atleta seedati, relazione `allenamenti`
+collegata (`squadra` è un campo string libero dal 2026-09-18, vedi Changelog)
 
 ## Schema reale creato
 
@@ -26,7 +26,7 @@
 | `numeroMaglia` | integer | min 1 / max 99 | — |
 | `proStatus` | boolean | default `true` | — |
 | `avatar` | media single | solo `images` | — |
-| `squadra` | relation manyToOne → `api::squadra.squadra` | — | ✅ collegata il 2026-09-05, bidirezionale (`squadra.atleti`) |
+| `squadra` | string | — | fino al 2026-09-18 era relation manyToOne → `api::squadra.squadra` (vedi [squadra.md](squadra.md)); rimosso il content-type, ora stringa libera |
 | `allenamenti` | relation oneToMany → `api::allenamento.allenamento` | — | ✅ reverse della relazione required su `allenamento` (piano per singolo atleta) |
 | `testFisici` | relation oneToMany → `api::test-fisico.test-fisico` | — | ✅ reverse della relazione su `test-fisico` |
 | `infortuni` | relation oneToMany → `api::infortunio.infortunio` | — | ✅ reverse della relazione su `infortunio` |
@@ -93,14 +93,13 @@ sportivi, e fa da hub per tutti i dati privati (test, infortuni, dieta, highligh
 | `pesoKg` | decimal | no | il mock mostra 78,2 |
 | `proStatus` | boolean | no | badge "Pro Status"; default `true` |
 | `avatar` | media (single, images) | no | se assente il frontend usa le iniziali |
-| `squadra` | relation manyToOne → `api::squadra.squadra` | no | vedi [squadra.md](squadra.md) |
+| `squadra` | string | no | campo libero (ex relazione, vedi [squadra.md](squadra.md)) |
 | `numeroMaglia` | integer | no | opzionale |
 | `piedePreferito` | enumeration | no | `destro`, `sinistro`, `ambidestro` |
 
 ## Relazioni
 
 - `user` ← 1‑1 con `plugin::users-permissions.user`
-- `squadra` → manyToOne
 - reverse (definite dagli altri content-type): `testFisici`, `infortuni`, `pianiAlimentari`,
   `highlights`, `videoCoach`, eventuali `allenamenti`
 
@@ -143,7 +142,7 @@ ad *Atleta*).
 
 `GET /api/atleta/me` (autenticato) — `src/api/atleta/controllers/atleta.ts` +
 `src/api/atleta/routes/atleta-me.ts`. Filtra per `user.id` lato server (nessun filtro accettato dal
-client), popola `avatar` e `squadra` (solo campo `nome`), sanitizza con
+client), popola `avatar` (`squadra` è una stringa, non serve popolarla dal 2026-09-18), sanitizza con
 `strapi.contentAPI.sanitize.output`. 404 se l'utente non ha un `atleta` collegato. Path scelto
 apposta diverso da `/api/atleti/:id` per non competere con la rotta core.
 
@@ -184,3 +183,6 @@ permesso). Non ancora testato con un JWT reale (nessun `atleta` collegato a `Tes
   server è tornato su da solo (autoReload) senza bisogno di restart manuale.
 - **2026-09-14** — `GET /api/atleta/me` ora popola anche `squadra` (solo `nome`) oltre ad `avatar`,
   per la pagina profilo del frontend (ruolo + squadra). Collegata `/profile` ai dati reali.
+- **2026-09-18** — `squadra` da relazione a **campo string libero** (rimosso il content-type
+  `Squadra`, vedi [squadra.md](squadra.md) → Changelog). `GET /api/atleta/me` non popola più
+  `squadra` (è uno scalare).

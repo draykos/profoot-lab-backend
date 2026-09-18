@@ -26,10 +26,11 @@ export default factories.createCoreController('api::atleta.atleta', ({ strapi })
     }
 
     // `findForUser` è condiviso con gli altri endpoint `me` e non popola nulla; qui recuperiamo
-    // avatar e nome squadra con una seconda query mirata invece di appesantire il service comune.
+    // l'avatar con una seconda query mirata invece di appesantire il service comune.
+    // `squadra` è un campo stringa libero, non serve popolarlo.
     const atleta = await strapi.documents('api::atleta.atleta').findOne({
       documentId: found.documentId,
-      populate: { avatar: true, squadra: { fields: ['nome'] } },
+      populate: { avatar: true },
     });
 
     // Niente `this.sanitizeOutput`/`this.transformResponse`: con la firma a oggetto del

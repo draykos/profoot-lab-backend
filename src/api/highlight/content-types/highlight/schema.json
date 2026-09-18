@@ -35,9 +35,7 @@
       "enum": ["gol", "assist", "azione_difensiva", "dribbling", "parata"]
     },
     "avversario": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::squadra.squadra"
+      "type": "string"
     },
     "partita": {
       "type": "relation",

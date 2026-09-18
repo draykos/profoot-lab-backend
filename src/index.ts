@@ -13,9 +13,6 @@ const ATLETA_ROLE_TYPE = 'atleta';
 const ATLETA_ACTIONS = [
   'plugin::users-permissions.user.me',
   'api::atleta.atleta.me',
-  // squadra: catalogo condiviso, sola lettura (vedi docs/content-types/squadra.md)
-  'api::squadra.squadra.find',
-  'api::squadra.squadra.findOne',
   // partita: calendario condiviso, sola lettura (vedi docs/content-types/partita.md)
   'api::partita.partita.find',
   'api::partita.partita.findOne',
