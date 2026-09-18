@@ -2,7 +2,7 @@ import type { Core } from '@strapi/strapi';
 
 const bunnyPullZone = process.env.BUNNY_PULL_ZONE;
 
-const config: Core.Config.Middlewares = [
+const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Middlewares => [
   'strapi::logger',
   'strapi::errors',
   {
@@ -19,7 +19,16 @@ const config: Core.Config.Middlewares = [
       },
     },
   },
-  'strapi::cors',
+  {
+    name: 'strapi::cors',
+    config: {
+      // Explicit origin list + credentials: true are required for the users-permissions
+      // httpOnly refresh-token cookie to be set/sent cross-origin from the frontend.
+      origin: env.array('CORS_ORIGINS', ['http://localhost:8080']),
+      credentials: true,
+      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
+    },
+  },
   'strapi::poweredBy',
   'strapi::query',
   'strapi::body',
