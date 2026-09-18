@@ -29,6 +29,10 @@ services:
           property: connectionString
       - key: IS_PROXIED
         value: "true"
+      # Public URL of the deployed profoot-lab-frontend Render service (or its custom domain).
+      # Required for the users-permissions httpOnly refresh-token cookie to work cross-origin.
+      - key: CORS_ORIGINS
+        sync: false
       - key: APP_KEYS
         generateValue: true
       - key: API_TOKEN_SALT
