@@ -29,7 +29,6 @@ export default factories.createCoreController('api::video-coach.video-coach', ({
     const videoCoach = await strapi.documents('api::video-coach.video-coach').findMany({
       filters: { atleta: { id: atleta.id } },
       sort: { data: 'desc' },
-      populate: { copertina: true },
       limit: 15,
     });
 

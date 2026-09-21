@@ -40,7 +40,18 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
         // user was silently logged out once the short-lived access token expired. `None` fixes
         // that, but requires HTTPS (`Secure`) — keep the default `Lax` for local http://localhost
         // dev, where frontend and backend already share the same site anyway.
-        cookie: env('NODE_ENV', 'development') === 'production' ? { sameSite: 'none' } : undefined,
+        //
+        // `maxAge` (ms) must be set explicitly and kept aligned with the default
+        // `maxRefreshTokenLifespan` (30 days, in seconds) — otherwise the plugin issues the
+        // refresh cookie with no Max-Age/Expires at all, i.e. a browser-session cookie. Mobile
+        // browsers/PWAs routinely discard session cookies when the app is backgrounded and the
+        // process is reclaimed, so the next silent refresh (e.g. after the 30-minute access token
+        // expires while backgrounded) finds no cookie to send and force-logs-out the user even
+        // though the refresh token was still valid server-side.
+        cookie:
+          env('NODE_ENV', 'development') === 'production'
+            ? { sameSite: 'none', maxAge: 30 * 24 * 60 * 60 * 1000 }
+            : undefined,
       },
     },
   },
