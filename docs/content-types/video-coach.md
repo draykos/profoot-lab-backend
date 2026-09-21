@@ -21,7 +21,6 @@
 - `video` è l'**URL** del video sull'hosting esterno (`string`, obbligatorio, con validazione
   regex `^https?://[^\s]+$` — deve iniziare con `http://` o `https://` e non contenere spazi).
 - `data` (`date`, obbligatorio): giorno del video. Il client deriva "Oggi"/"Ieri".
-- `copertina` resta un media upload (immagini), opzionale.
 
 ## Endpoint creato
 
@@ -29,9 +28,9 @@
 `src/api/video-coach/routes/video-coach-me.ts`. Stesso pattern di `allenamento.me` /
 `test-fisico.me`: risolve l'atleta dall'utente autenticato via
 `strapi.service('api::atleta.atleta').findForUser(userId)`, filtra per `atleta.id`, ordina per `data`
-**discendente** (il video di oggi in cima), popola `copertina`, **limitato ai 15 più recenti**
-(`limit: 15` fisso lato server, Document Service API — non richiedibile dal client). Nessun altro
-filtro/populate/limite accettato dal client.
+**discendente** (il video di oggi in cima), **limitato ai 15 più recenti** (`limit: 15` fisso lato
+server, Document Service API — non richiedibile dal client). Nessun altro filtro/populate/limite
+accettato dal client.
 
 Permessi seedati in `bootstrap()`: solo `api::video-coach.video-coach.me` per il ruolo Atleta —
 **niente `find`/`findOne`** (dato privato per atleta).
@@ -90,7 +89,6 @@ work-in-progress** (non consuma questa entità); i video sono mostrati in `/trai
 | `durataMinuti` | integer | no | "5 min" |
 | `data` | date | sì | giorno del video; un video al giorno per atleta |
 | `video` | string | sì | **URL** del video (hosting esterno). Validazione regex `^https?://[^\s]+$` |
-| `copertina` | media (single, images) | no | |
 
 ### Storia dei campi
 
@@ -99,6 +97,8 @@ work-in-progress** (non consuma questa entità); i video sono mostrati in `/trai
 - `video`: media → **URL** (`string` + regex `^https?://[^\s]+$`). (Breve parentesi 2026-09-07 in cui
   era stato pensato come GUID senza validazione, poi tornato a URL validato.)
 - `ordine` sostituito dall'ordinamento per `data`.
+- `copertina` (media upload, opzionale) **rimosso il 2026-09-21**: il frontend ora usa la thumbnail
+  auto-generata da Bunny Stream (stesso pull zone/`videoId` del video), niente più upload manuale.
 
 ## Assegnazione
 
@@ -134,6 +134,13 @@ server. Niente `find`/`findOne` per il ruolo Atleta.
 
 ## Changelog
 
+- **2026-09-21** — **rimosso il campo `copertina`** (media upload) dallo schema e dal `populate`
+  di `me`. Causa: il player video del frontend è stato migrato da iframe Bunny a `<video>` nativo
+  + `hls.js` (per problemi di dimensionamento/resize dell'iframe su contenuti non-16:9), e in
+  quell'occasione si è passati a usare la thumbnail auto-generata da Bunny Stream
+  (`{pullzone}/{videoId}/thumbnail.jpg`, stesso `videoId` già estratto dall'URL del video) al posto
+  di una cover caricata a mano. Controllo editoriale, se mai servisse, si fa caricando una
+  thumbnail custom direttamente nel pannello Bunny per quel video, non più in Strapi.
 - **2026-09-14** — **revert lato frontend**: `/mental` ripristinata come placeholder
   work-in-progress (identica alla versione pre-2026-09-14); la sezione `/video-coach` è stata
   rimossa e i video di questa entità sono ora mostrati in `/training` (video di oggi + storico) e

@@ -38,11 +38,6 @@
       "type": "string",
       "required": true,
       "regex": "^https?://[^\\s]+$"
-    },
-    "copertina": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": ["images"]
     }
   }
 }
