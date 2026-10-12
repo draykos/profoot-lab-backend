@@ -1,0 +1,45 @@
+{
+  "collectionName": "components_dieta_giorni_settimana",
+  "info": {
+    "displayName": "Giorni settimana",
+    "description": "Giorni della settimana in cui si ripete un pasto della settimana tipo."
+  },
+  "options": {},
+  "attributes": {
+    "lun": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "mar": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "mer": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "gio": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "ven": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "sab": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "dom": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    }
+  }
+}

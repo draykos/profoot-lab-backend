@@ -31,8 +31,9 @@ export default factories.createCoreController(
         filters: { atleta: { id: atleta.id } },
         sort: { validoDal: 'desc' },
         // Components are not populated by default: the meals are the core of the plan, and
-        // kcal/macro totals are derived client-side from them.
-        populate: ['pasti'],
+        // kcal/macro totals are derived client-side from them. `giorni` tells on which weekdays
+        // each meal of the template week repeats (missing = every day).
+        populate: { pasti: { populate: ['giorni'] } },
       });
 
       const contentType = strapi.contentType('api::piano-alimentare.piano-alimentare');

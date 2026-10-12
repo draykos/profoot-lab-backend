@@ -19,7 +19,7 @@
 ## Endpoint creato
 
 `GET /api/piano-alimentare/me` — stesso pattern degli altri privati: risolve l'atleta via
-`findForUser`, filtra per `atleta.id`, ordina per `validoDal` decrescente, fa `populate` del component `pasti`. **Ritorna tutti i piani**,
+`findForUser`, filtra per `atleta.id`, ordina per `validoDal` decrescente, fa `populate` del component `pasti` e, annidato, di `giorni`. **Ritorna tutti i piani**,
 non solo quello "attivo": la logica per stabilire qual è il piano corrente (uno solo alla volta vs
 piani per giorno-tipo — decisione ancora aperta sotto) resta al client per ora. Permessi seedati in
 `bootstrap()`: solo `api::piano-alimentare.piano-alimentare.me`.
@@ -66,6 +66,18 @@ Piano nutrizionale giornaliero dell'atleta: obiettivo calorico, macro e lista pa
 | `carboidratiG` | integer | no | |
 | `proteineG` | integer | no | |
 | `grassiG` | integer | no | |
+| `giorni` | component `dieta.giorni-settimana` (non ripetibile) | no | giorni della settimana tipo in cui il pasto si ripete; assente = tutti i giorni |
+
+### Component `dieta.giorni-settimana`
+
+Sette boolean `lun`, `mar`, `mer`, `gio`, `ven`, `sab`, `dom` (tutti `required`, default `true`): nel
+backoffice appaiono come una fila di toggle. Strapi non ha un campo multi-select nativo, da qui il
+component al posto di un enum multiplo.
+
+**Settimana tipo:** il piano è una settimana che si ripete per tutto il periodo `validoDal`–`validoAl`;
+ogni pasto indica in quali giorni compare. Per un giorno con menu alternativi (es. due pranzi diversi)
+si inseriscono più pasti con lo stesso `tipo` e giorni complementari. Il frontend mostra oggi + i 6
+giorni successivi, filtrando i pasti per giorno della settimana.
 
 `fabbisognoKcal` e i totali macro mostrati in UI = somma di `pasti[].kcal` / `carboidratiG` /
 `proteineG` / `grassiG` → calcolati lato frontend, non memorizzati.
@@ -105,3 +117,6 @@ policy di ownership; mai `find` aperto.
 - **2026-10-12** — rimossi `obiettivoKcal`, `targetCarboidratiG`, `targetProteineG`,
   `targetGrassiG`: i totali sono la somma dei pasti, calcolata dal frontend. L'endpoint `me` ora fa
   `populate` di `pasti` (prima i pasti non venivano restituiti).
+- **2026-10-12** — aggiunto il component `dieta.giorni-settimana` (campo `giorni` su `dieta.pasto`):
+  il piano diventa una settimana tipo ripetuta. Pasti senza `giorni` valgono per tutti i giorni.
+  L'endpoint `me` popola `pasti.giorni`.
