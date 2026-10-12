@@ -2,7 +2,7 @@
   "collectionName": "components_dieta_pasti",
   "info": {
     "displayName": "Pasto",
-    "description": "Un pasto del piano alimentare: orario, tipo, descrizione e valori nutrizionali."
+    "description": "Un pasto della settimana tipo: orario, tipo, descrizione, valori nutrizionali e giorni in cui si ripete."
   },
   "options": {},
   "attributes": {
@@ -35,6 +35,11 @@
     "grassiG": {
       "type": "integer",
       "min": 0
+    },
+    "giorni": {
+      "type": "component",
+      "component": "dieta.giorni-settimana",
+      "repeatable": false
     }
   }
 }
