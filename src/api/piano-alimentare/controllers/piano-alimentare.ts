@@ -30,6 +30,9 @@ export default factories.createCoreController(
       const piani = await strapi.documents('api::piano-alimentare.piano-alimentare').findMany({
         filters: { atleta: { id: atleta.id } },
         sort: { validoDal: 'desc' },
+        // Components are not populated by default: the meals are the core of the plan, and
+        // kcal/macro totals are derived client-side from them.
+        populate: ['pasti'],
       });
 
       const contentType = strapi.contentType('api::piano-alimentare.piano-alimentare');
