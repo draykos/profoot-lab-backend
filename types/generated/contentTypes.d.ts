@@ -665,7 +665,7 @@ export interface ApiPartitaPartita extends Struct.CollectionTypeSchema {
 export interface ApiPianoAlimentarePianoAlimentare extends Struct.CollectionTypeSchema {
   collectionName: 'piani_alimentari';
   info: {
-    description: 'Piano nutrizionale di un atleta: obiettivo calorico, target macro e lista pasti.';
+    description: 'Piano nutrizionale di un atleta: lista pasti. Kcal e macro totali sono derivati dalla somma dei pasti.';
     displayName: 'Piano alimentare';
     pluralName: 'piani-alimentari';
     singularName: 'piano-alimentare';
@@ -684,36 +684,8 @@ export interface ApiPianoAlimentarePianoAlimentare extends Struct.CollectionType
     > &
       Schema.Attribute.Private;
     note: Schema.Attribute.Text;
-    obiettivoKcal: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      >;
     pasti: Schema.Attribute.Component<'dieta.pasto', true>;
     publishedAt: Schema.Attribute.DateTime;
-    targetCarboidratiG: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      >;
-    targetGrassiG: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      >;
-    targetProteineG: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
     validoAl: Schema.Attribute.Date;
