@@ -12,11 +12,14 @@
 - Tabelle DB verificate: `piani_alimentari`, `piani_alimentari_atleta_lnk`,
   `piani_alimentari_cmps` (join table del component), `components_dieta_pasti`
 - `pasti` **non `required`** a livello di schema (un piano può nascere senza pasti e crescere dopo)
+- **Nessun target memorizzato** (2026-10-12): rimossi `obiettivoKcal`, `targetCarboidratiG`,
+  `targetProteineG`, `targetGrassiG`. Kcal e macro totali mostrati in UI sono la **somma dei
+  relativi valori dei pasti**, calcolata lato frontend.
 
 ## Endpoint creato
 
 `GET /api/piano-alimentare/me` — stesso pattern degli altri privati: risolve l'atleta via
-`findForUser`, filtra per `atleta.id`, ordina per `validoDal` decrescente. **Ritorna tutti i piani**,
+`findForUser`, filtra per `atleta.id`, ordina per `validoDal` decrescente, fa `populate` del component `pasti`. **Ritorna tutti i piani**,
 non solo quello "attivo": la logica per stabilire qual è il piano corrente (uno solo alla volta vs
 piani per giorno-tipo — decisione ancora aperta sotto) resta al client per ora. Permessi seedati in
 `bootstrap()`: solo `api::piano-alimentare.piano-alimentare.me`.
@@ -49,10 +52,6 @@ Piano nutrizionale giornaliero dell'atleta: obiettivo calorico, macro e lista pa
 | `atleta` | relation manyToOne → `api::atleta.atleta` | sì | |
 | `validoDal` | date | sì | un piano attivo per data |
 | `validoAl` | date | no | null = ancora valido |
-| `obiettivoKcal` | integer | no | "Obiettivo" 2500 |
-| `targetCarboidratiG` | integer | no | per le barre macro; in alternativa calcolato dai pasti |
-| `targetProteineG` | integer | no | |
-| `targetGrassiG` | integer | no | |
 | `note` | text | no | |
 | `pasti` | component repeatable `dieta.pasto` | sì | vedi sotto |
 
@@ -68,8 +67,8 @@ Piano nutrizionale giornaliero dell'atleta: obiettivo calorico, macro e lista pa
 | `proteineG` | integer | no | |
 | `grassiG` | integer | no | |
 
-`fabbisognoKcal` mostrato in UI = somma di `pasti[].kcal` → calcolato lato frontend o in un campo
-computed, non memorizzato.
+`fabbisognoKcal` e i totali macro mostrati in UI = somma di `pasti[].kcal` / `carboidratiG` /
+`proteineG` / `grassiG` → calcolati lato frontend, non memorizzati.
 
 ## Relazioni
 
@@ -92,7 +91,8 @@ policy di ownership; mai `find` aperto.
 - Un solo piano attivo per volta, o piani diversi per giorno-tipo (giorno partita / riposo /
   doppia seduta)? **Ancora aperto** — per ora `me` ritorna tutti i piani, la scelta è del client.
 - ~~`pasti` come component vs content-type separato~~ — **chiuso: component** (2026-09-05).
-- Target macro memorizzati o derivati dalla somma dei pasti?
+- ~~Target macro memorizzati o derivati dalla somma dei pasti?~~ — **chiuso: derivati** dalla somma
+  dei pasti, lato frontend (2026-10-12).
 - L'atleta segna i pasti come consumati? (serve stato per-pasto per-giorno → non un component
   statico)
 
@@ -102,3 +102,6 @@ policy di ownership; mai `find` aperto.
 - **2026-09-05** — creato lo schema `api::piano-alimentare.piano-alimentare` e il component
   `dieta.pasto` (decisione chiusa: component, non content-type separato). Creato l'endpoint `me` e
   seedato il permesso per il ruolo Atleta.
+- **2026-10-12** — rimossi `obiettivoKcal`, `targetCarboidratiG`, `targetProteineG`,
+  `targetGrassiG`: i totali sono la somma dei pasti, calcolata dal frontend. L'endpoint `me` ora fa
+  `populate` di `pasti` (prima i pasti non venivano restituiti).
