@@ -1,9 +1,26 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface DietaGiorniSettimana extends Struct.ComponentSchema {
+  collectionName: 'components_dieta_giorni_settimana';
+  info: {
+    description: 'Giorni della settimana in cui si ripete un pasto della settimana tipo.';
+    displayName: 'Giorni settimana';
+  };
+  attributes: {
+    dom: Schema.Attribute.Boolean & Schema.Attribute.Required & Schema.Attribute.DefaultTo<true>;
+    gio: Schema.Attribute.Boolean & Schema.Attribute.Required & Schema.Attribute.DefaultTo<true>;
+    lun: Schema.Attribute.Boolean & Schema.Attribute.Required & Schema.Attribute.DefaultTo<true>;
+    mar: Schema.Attribute.Boolean & Schema.Attribute.Required & Schema.Attribute.DefaultTo<true>;
+    mer: Schema.Attribute.Boolean & Schema.Attribute.Required & Schema.Attribute.DefaultTo<true>;
+    sab: Schema.Attribute.Boolean & Schema.Attribute.Required & Schema.Attribute.DefaultTo<true>;
+    ven: Schema.Attribute.Boolean & Schema.Attribute.Required & Schema.Attribute.DefaultTo<true>;
+  };
+}
+
 export interface DietaPasto extends Struct.ComponentSchema {
   collectionName: 'components_dieta_pasti';
   info: {
-    description: 'Un pasto del piano alimentare: orario, tipo, descrizione e valori nutrizionali.';
+    description: 'Un pasto della settimana tipo: orario, tipo, descrizione, valori nutrizionali e giorni in cui si ripete.';
     displayName: 'Pasto';
   };
   attributes: {
@@ -15,6 +32,7 @@ export interface DietaPasto extends Struct.ComponentSchema {
         number
       >;
     descrizione: Schema.Attribute.Text & Schema.Attribute.Required;
+    giorni: Schema.Attribute.Component<'dieta.giorni-settimana', false>;
     grassiG: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
         {
@@ -48,6 +66,7 @@ export interface DietaPasto extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
+      'dieta.giorni-settimana': DietaGiorniSettimana;
       'dieta.pasto': DietaPasto;
     }
   }
