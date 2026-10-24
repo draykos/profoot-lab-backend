@@ -32,6 +32,16 @@
 server, Document Service API — non richiedibile dal client). Nessun altro filtro/populate/limite
 accettato dal client.
 
+**Campo calcolato `thumbnail`** (dal 2026-10-24, non è un attributo dello schema): per ogni video
+l'endpoint chiede all'API di Bunny Stream (`GET video.bunnycdn.com/library/{libraryId}/videos/{videoId}`,
+`libraryId`/`videoId` estratti dal link "play") il `thumbnailFileName` reale e restituisce
+`https://{BUNNY_STREAM_CDN_HOSTNAME}/{videoId}/{thumbnailFileName}`. Serve perché il nome del file
+è `thumbnail.jpg` solo finché si usa la thumbnail auto-generata: impostandone una custom nel
+pannello Bunny diventa `thumbnail_<hash>.jpg`. Risultati in cache in memoria per 1 ora
+(`src/utils/bunny-stream.ts`). Env: `BUNNY_STREAM_API_KEY` (API key della library) e
+`BUNNY_STREAM_CDN_HOSTNAME` (`vz-xxxx.b-cdn.net`); se mancano, o l'API fallisce, `thumbnail` è
+`null` e il frontend mostra il segnaposto.
+
 Permessi seedati in `bootstrap()`: solo `api::video-coach.video-coach.me` per il ruolo Atleta —
 **niente `find`/`findOne`** (dato privato per atleta).
 
@@ -165,3 +175,8 @@ server. Niente `find`/`findOne` per il ruolo Atleta.
   giorno in home, lista degli ultimi 7 video idonei (oggi o passati, mai futuri), player in una
   modale Bunny Stream. Endpoint `me` limitato ai 15 risultati più recenti (`limit: 15`, Document
   Service API). Vedi lo spec di design nel repo frontend.
+- **2026-10-24** — la thumbnail di "Video Settembre" era rotta: il frontend componeva sempre
+  `{pullzone}/{videoId}/thumbnail.jpg` (404), mentre su Bunny il file era
+  `thumbnail_65dc46df.jpg` (thumbnail custom). Aggiunto a `me` il campo calcolato `thumbnail`,
+  risolto via API Bunny Stream (vedi *Endpoint creato*), e nel frontend il fallback al segnaposto
+  quando l'immagine non si carica. Nuove env `BUNNY_STREAM_API_KEY` / `BUNNY_STREAM_CDN_HOSTNAME`.
