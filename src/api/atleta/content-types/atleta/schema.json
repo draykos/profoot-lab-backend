@@ -99,8 +99,8 @@
     },
     "videoCoach": {
       "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::video-coach.video-coach",
+      "relation": "oneToOne",
+      "target": "api::video-coach-atleta.video-coach-atleta",
       "mappedBy": "atleta"
     },
     "calendarioPartite": {

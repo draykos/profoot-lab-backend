@@ -207,3 +207,8 @@ read-only), salvo eccezioni annotate.
   `GET /api/calendario-partite/me` (partite ordinate per `dataOra`). Rimossi `api::partita.partita`,
   i suoi permessi `find`/`findOne` per l'Atleta e la relazione `highlight.partita`. Doc:
   `calendario-partite.md`.
+
+- **2026-10-24** — **`video-coach`: un documento per atleta.** I video diventano il component
+  ripetibile `coach.video` dentro un "Video Coach" per atleta (oneToOne), stesso schema di
+  backoffice di `piano-alimentare` e `calendario-partite`. Draft & Publish rimosso. Tabella nuova
+  `video_coach_atleti` (la vecchia `video_coach` viene eliminata). Vedi `video-coach.md`.

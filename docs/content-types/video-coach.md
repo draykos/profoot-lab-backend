@@ -1,6 +1,6 @@
 # Video Coach
 
-**Stato:** ✅ Creato · 🔄 rivisto il 2026-09-14
+**Stato:** ✅ Creato · 🔄 rivisto il 2026-10-24 (un video coach per atleta, video come component)
 
 > Ex **"Modulo mental coach"**. Rinominato in `video-coach` (UID, tabella, rotte, relazione) il
 > 2026-09-07: "modulo" non descriveva più "un video al giorno". Vedi Changelog.
@@ -13,11 +13,23 @@
 
 ## Schema reale creato
 
-- File: `src/api/video-coach/content-types/video-coach/schema.json` (+ factory
-  `controllers/routes/services`)
-- UID: `api::video-coach.video-coach` · tabella `video_coach` · `draftAndPublish: true`
-- **Relazione con `atleta`** (manyToOne) ↔ `atleta.videoCoach` (oneToMany): il video coach è
-  **per utente**, un video al giorno per ogni atleta. Non è un catalogo condiviso.
+> **Dal 2026-10-24** lo schema è cambiato: **un documento "Video Coach" per atleta**, con i video
+> come component ripetibile `coach.video` — stesso schema di backoffice di `piano-alimentare` e
+> `calendario-partite` (scegli l'atleta, poi gestisci l'elenco dei suoi video). Vedi Changelog.
+
+- File: `src/api/video-coach-atleta/content-types/video-coach-atleta/schema.json` (+ factory
+  `controllers/routes/services`) e `src/components/coach/video.json`
+- UID: `api::video-coach-atleta.video-coach-atleta` · tabella `video_coach_atleti` ·
+  `draftAndPublish: false` (prima: `api::video-coach.video-coach`, tabella `video_coach`, un record
+  per video, `draftAndPublish: true`). **UID nuovo e non semplice modifica di quello vecchio**:
+  togliere Draft & Publish a un content-type esistente fa partire una migrazione Strapi che cancella
+  le bozze sulla tabella *nuova* prima di crearla, e Strapi va in crash all'avvio. L'endpoint
+  resta `GET /api/video-coach/me`; il permesso diventa `api::video-coach-atleta.video-coach-atleta.me`.
+- **Relazione con `atleta`** (oneToOne) ↔ `atleta.videoCoach` (oneToOne): un video coach per
+  atleta, un video al giorno al suo interno. Non è un catalogo condiviso.
+- Component `coach.video`: `titolo` (string, obbligatorio), `data` (date, obbligatorio),
+  `categoria` (enum), `durataMinuti` (integer ≥ 1), `video` (URL, vedi sotto). **Niente bozze**:
+  un video compare nell'app dal giorno della sua `data`.
 - `video` è l'**URL** del video sull'hosting esterno (`string`, obbligatorio, con validazione
   regex `^https?://[^\s]+$` — deve iniziare con `http://` o `https://` e non contenere spazi).
 - `data` (`date`, obbligatorio): giorno del video. Il client deriva "Oggi"/"Ieri".
@@ -180,3 +192,12 @@ server. Niente `find`/`findOne` per il ruolo Atleta.
   `thumbnail_65dc46df.jpg` (thumbnail custom). Aggiunto a `me` il campo calcolato `thumbnail`,
   risolto via API Bunny Stream (vedi *Endpoint creato*), e nel frontend il fallback al segnaposto
   quando l'immagine non si carica. Nuove env `BUNNY_STREAM_API_KEY` / `BUNNY_STREAM_CDN_HOSTNAME`.
+- **2026-10-24** — **un video coach per atleta.** Il content-type passa da un record per video
+  (`video_coach`, manyToOne verso `atleta`, Draft & Publish) a un documento per atleta
+  (`api::video-coach-atleta.video-coach-atleta`, tabella `video_coach_atleti`, oneToOne) con i video nel component ripetibile `coach.video`, come
+  `piano-alimentare` e `calendario-partite`. Draft & Publish rimosso: la visibilità la decide già
+  `data` (il client mostra solo i video fino a oggi). `GET /api/video-coach/me` restituisce
+  sempre un array piatto di video (ordinati per `data` desc, max 15, con `thumbnail`), ma gli
+  elementi non hanno più `documentId`. La tabella `video_coach` viene eliminata da Strapi al primo
+  avvio: i 5 video pubblicati in produzione (4 di Carlo Rossi, 1 di Dario Green) sono stati
+  salvati prima e reinseriti nel nuovo formato dal backoffice.

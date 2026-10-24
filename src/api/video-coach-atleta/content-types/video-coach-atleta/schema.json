@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "video_coach_atleti",
+  "info": {
+    "singularName": "video-coach-atleta",
+    "pluralName": "video-coach-atleti",
+    "displayName": "Video Coach",
+    "description": "Video coach di un atleta (uno per atleta): elenco dei video, uno al giorno."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "atleta": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::atleta.atleta",
+      "inversedBy": "videoCoach"
+    },
+    "video": {
+      "type": "component",
+      "component": "coach.video",
+      "repeatable": true
+    }
+  }
+}
