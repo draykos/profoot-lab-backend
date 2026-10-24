@@ -28,9 +28,9 @@ const ATLETA_ACTIONS = [
   // highlight: dato privato per singolo atleta — solo `me`
   // (vedi docs/content-types/highlight.md)
   'api::highlight.highlight.me',
-  // video-coach: video coach per singolo atleta (uno al giorno), dato privato —
-  // solo l'azione self-scoped `me` (vedi docs/content-types/video-coach.md)
-  'api::video-coach.video-coach.me',
+  // video-coach-atleta: one video coach per athlete (one video a day), private data —
+  // only the self-scoped `me` action (see docs/content-types/video-coach.md)
+  'api::video-coach-atleta.video-coach-atleta.me',
   // calendario-partite: one match calendar per athlete, private data — only `me`
   // (see docs/content-types/calendario-partite.md)
   'api::calendario-partite.calendario-partite.me',

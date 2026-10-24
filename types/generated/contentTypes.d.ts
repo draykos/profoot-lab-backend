@@ -502,7 +502,7 @@ export interface ApiAtletaAtleta extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
     user: Schema.Attribute.Relation<'oneToOne', 'plugin::users-permissions.user'>;
-    videoCoach: Schema.Attribute.Relation<'oneToMany', 'api::video-coach.video-coach'>;
+    videoCoach: Schema.Attribute.Relation<'oneToOne', 'api::video-coach-atleta.video-coach-atleta'>;
   };
 }
 
@@ -711,40 +711,31 @@ export interface ApiTestFisicoTestFisico extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiVideoCoachVideoCoach extends Struct.CollectionTypeSchema {
-  collectionName: 'video_coach';
+export interface ApiVideoCoachAtletaVideoCoachAtleta extends Struct.CollectionTypeSchema {
+  collectionName: 'video_coach_atleti';
   info: {
-    description: 'Video coach assegnato a un singolo atleta per un giorno specifico (uno al giorno).';
+    description: 'Video coach di un atleta (uno per atleta): elenco dei video, uno al giorno.';
     displayName: 'Video Coach';
-    pluralName: 'video-coaches';
-    singularName: 'video-coach';
+    pluralName: 'video-coach-atleti';
+    singularName: 'video-coach-atleta';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    atleta: Schema.Attribute.Relation<'manyToOne', 'api::atleta.atleta'>;
-    categoria: Schema.Attribute.Enumeration<
-      ['pre_partita', 'focus', 'sonno', 'stress', 'recupero']
-    >;
+    atleta: Schema.Attribute.Relation<'oneToOne', 'api::atleta.atleta'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
-    data: Schema.Attribute.Date & Schema.Attribute.Required;
-    durataMinuti: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 1;
-        },
-        number
-      >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::video-coach.video-coach'> &
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::video-coach-atleta.video-coach-atleta'
+    > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    titolo: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
-    video: Schema.Attribute.String & Schema.Attribute.Required;
+    video: Schema.Attribute.Component<'coach.video', true>;
   };
 }
 
@@ -1184,7 +1175,7 @@ declare module '@strapi/strapi' {
       'api::infortunio.infortunio': ApiInfortunioInfortunio;
       'api::piano-alimentare.piano-alimentare': ApiPianoAlimentarePianoAlimentare;
       'api::test-fisico.test-fisico': ApiTestFisicoTestFisico;
-      'api::video-coach.video-coach': ApiVideoCoachVideoCoach;
+      'api::video-coach-atleta.video-coach-atleta': ApiVideoCoachAtletaVideoCoachAtleta;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
