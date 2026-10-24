@@ -2,7 +2,7 @@
   "collectionName": "components_calendario_partite",
   "info": {
     "displayName": "Partita",
-    "description": "Una partita del calendario dell'atleta: avversari, data/ora, stadio, competizione, stato e risultato."
+    "description": "Una partita del calendario dell'atleta: avversari, data/ora, stadio, competizione e risultato."
   },
   "options": {},
   "attributes": {
@@ -22,11 +22,6 @@
     "competizione": {
       "type": "enumeration",
       "enum": ["serie_a", "champions", "coppa_italia", "amichevole"]
-    },
-    "stato": {
-      "type": "enumeration",
-      "enum": ["in_programma", "giocata", "rinviata"],
-      "default": "in_programma"
     },
     "golCasa": {
       "type": "integer",

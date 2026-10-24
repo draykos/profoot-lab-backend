@@ -3,7 +3,7 @@ import type { Schema, Struct } from '@strapi/strapi';
 export interface CalendarioPartita extends Struct.ComponentSchema {
   collectionName: 'components_calendario_partite';
   info: {
-    description: "Una partita del calendario dell'atleta: avversari, data/ora, stadio, competizione, stato e risultato.";
+    description: "Una partita del calendario dell'atleta: avversari, data/ora, stadio, competizione e risultato.";
     displayName: 'Partita';
   };
   attributes: {
@@ -28,8 +28,6 @@ export interface CalendarioPartita extends Struct.ComponentSchema {
     squadraCasa: Schema.Attribute.String;
     squadraTrasferta: Schema.Attribute.String;
     stadio: Schema.Attribute.String;
-    stato: Schema.Attribute.Enumeration<['in_programma', 'giocata', 'rinviata']> &
-      Schema.Attribute.DefaultTo<'in_programma'>;
   };
 }
 
