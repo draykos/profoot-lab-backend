@@ -23,6 +23,9 @@ Risposta: `{ data: Partita[] }` — direttamente l'array delle partite, non il d
 Atleta senza calendario → `{ data: [] }`. **Ritorna tutte le partite**, anche quelle già giocate:
 la "prossima partita" (prima con `dataOra >= now()`) la sceglie il client.
 
+**Niente campo `stato`** (rimosso il 2026-10-24): lo stato si ricava dalla data — `dataOra` passata
+= giocata, futura = in programma. Le partite rinviate non sono gestite.
+
 Permessi seedati in `bootstrap()`: solo `api::calendario-partite.calendario-partite.me`.
 
 ## Scopo
@@ -52,7 +55,6 @@ Calendario partite del singolo atleta: avversari, data/ora, stadio, competizione
 | `dataOra` | datetime | sì | il frontend deriva giorno + ora |
 | `stadio` | string | no | |
 | `competizione` | enumeration | no | `serie_a`, `champions`, `coppa_italia`, `amichevole` |
-| `stato` | enumeration | no | `in_programma` (default), `giocata`, `rinviata` |
 | `golCasa` | integer ≥ 0 | no | per partite giocate |
 | `golTrasferta` | integer ≥ 0 | no | |
 
@@ -79,3 +81,7 @@ Calendario partite del singolo atleta: avversari, data/ora, stadio, competizione
   `calendario.partita` (stessi campi della vecchia `partita`), relazione `oneToOne` con `atleta`,
   endpoint `me` e permesso seedato. Rimossi il content-type condiviso `partita` e la relazione
   `highlight.partita` che lo referenziava.
+- **2026-10-24** — rimosso il campo `stato` (`in_programma`/`giocata`/`rinviata`) dal component
+  `calendario.partita`: lo stato si ricava da `dataOra` (passata = giocata, futura = in
+  programma) e le rinviate non si considerano. La colonna `stato` di
+  `components_calendario_partite` viene eliminata da Strapi al primo avvio.
