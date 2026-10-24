@@ -3,6 +3,7 @@
  */
 
 import { factories } from '@strapi/strapi';
+import { resolveThumbnailUrl } from '../../../utils/bunny-stream';
 
 export default factories.createCoreController('api::video-coach.video-coach', ({ strapi }) => ({
   /**
@@ -33,10 +34,19 @@ export default factories.createCoreController('api::video-coach.video-coach', ({
     });
 
     const contentType = strapi.contentType('api::video-coach.video-coach');
-    const sanitized = await strapi.contentAPI.sanitize.output(videoCoach, contentType, {
+    const sanitized = (await strapi.contentAPI.sanitize.output(videoCoach, contentType, {
       auth: ctx.state.auth,
-    });
+    })) as { video: string }[];
 
-    ctx.body = { data: sanitized };
+    // `thumbnail` is not a stored attribute: it's resolved from Bunny Stream on every response
+    // (cached), since the thumbnail file name can change when a custom one is set in Bunny.
+    const data = await Promise.all(
+      sanitized.map(async (v) => ({
+        ...v,
+        thumbnail: await resolveThumbnailUrl(v.video, strapi.log),
+      })),
+    );
+
+    ctx.body = { data };
   },
 }));
