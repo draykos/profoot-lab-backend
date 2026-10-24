@@ -37,11 +37,6 @@
     "avversario": {
       "type": "string"
     },
-    "partita": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::partita.partita"
-    },
     "copertina": {
       "type": "media",
       "multiple": false,

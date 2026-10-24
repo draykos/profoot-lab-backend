@@ -1,5 +1,38 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface CalendarioPartita extends Struct.ComponentSchema {
+  collectionName: 'components_calendario_partite';
+  info: {
+    description: "Una partita del calendario dell'atleta: avversari, data/ora, stadio, competizione, stato e risultato.";
+    displayName: 'Partita';
+  };
+  attributes: {
+    competizione: Schema.Attribute.Enumeration<
+      ['serie_a', 'champions', 'coppa_italia', 'amichevole']
+    >;
+    dataOra: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    golCasa: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    golTrasferta: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    squadraCasa: Schema.Attribute.String;
+    squadraTrasferta: Schema.Attribute.String;
+    stadio: Schema.Attribute.String;
+    stato: Schema.Attribute.Enumeration<['in_programma', 'giocata', 'rinviata']> &
+      Schema.Attribute.DefaultTo<'in_programma'>;
+  };
+}
+
 export interface DietaGiorniSettimana extends Struct.ComponentSchema {
   collectionName: 'components_dieta_giorni_settimana';
   info: {
@@ -66,6 +99,7 @@ export interface DietaPasto extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
+      'calendario.partita': CalendarioPartita;
       'dieta.giorni-settimana': DietaGiorniSettimana;
       'dieta.pasto': DietaPasto;
     }

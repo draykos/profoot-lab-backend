@@ -13,9 +13,6 @@ const ATLETA_ROLE_TYPE = 'atleta';
 const ATLETA_ACTIONS = [
   'plugin::users-permissions.user.me',
   'api::atleta.atleta.me',
-  // partita: calendario condiviso, sola lettura (vedi docs/content-types/partita.md)
-  'api::partita.partita.find',
-  'api::partita.partita.findOne',
   // allenamento: piano per singolo atleta, dato privato — solo l'azione self-scoped `me`,
   // mai `find`/`findOne` aperti (vedi docs/content-types/allenamento.md)
   'api::allenamento.allenamento.me',
@@ -34,6 +31,9 @@ const ATLETA_ACTIONS = [
   // video-coach: video coach per singolo atleta (uno al giorno), dato privato —
   // solo l'azione self-scoped `me` (vedi docs/content-types/video-coach.md)
   'api::video-coach.video-coach.me',
+  // calendario-partite: one match calendar per athlete, private data — only `me`
+  // (see docs/content-types/calendario-partite.md)
+  'api::calendario-partite.calendario-partite.me',
 ];
 
 async function ensureAtletaPermissions({ strapi }: { strapi: Core.Strapi }) {

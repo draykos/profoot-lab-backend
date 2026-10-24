@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "calendari_partite",
+  "info": {
+    "singularName": "calendario-partite",
+    "pluralName": "calendari-partite",
+    "displayName": "Calendario partite",
+    "description": "Calendario partite di un atleta (uno per atleta): elenco delle partite con avversari, data/ora, stadio e competizione."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "atleta": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::atleta.atleta",
+      "inversedBy": "calendarioPartite"
+    },
+    "partite": {
+      "type": "component",
+      "component": "calendario.partita",
+      "repeatable": true
+    }
+  }
+}
