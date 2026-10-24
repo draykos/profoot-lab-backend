@@ -1,6 +1,6 @@
 # Partita
 
-**Stato:** ✅ Creato
+**Stato:** ❌ Rimosso (2026-10-24) — sostituito da [calendario-partite.md](calendario-partite.md)
 
 ## Schema reale creato
 
@@ -79,3 +79,7 @@ per-atleta con minutaggio previsto/effettivo.)
 - **2026-09-18** — decisione ribaltata: `squadraCasa`/`squadraTrasferta` tornano a essere **stringhe
   libere**. Il content-type `squadra` è stato rimosso (mai consumato da `/matches`, ancora mock a
   stringhe) — vedi [squadra.md](squadra.md) → Changelog.
+- **2026-10-24** — **rimosso** il content-type condiviso `api::partita.partita` (tabella `partite`,
+  permessi `find`/`findOne` dell'Atleta). Le partite diventano **per atleta**: un calendario per
+  atleta con le partite come component ripetibile, gestito in backoffice come i pasti — vedi
+  [calendario-partite.md](calendario-partite.md). Rimossa anche la relazione `highlight.partita`.

@@ -7,7 +7,7 @@
 - File: `src/api/highlight/content-types/highlight/schema.json` (+ factory
   `controllers/routes/services`)
 - UID: `api::highlight.highlight` · tabella `highlights` · `draftAndPublish: true`
-- Tabelle DB verificate: `highlights`, `highlights_atleta_lnk`, `highlights_partita_lnk`
+- Tabelle DB verificate: `highlights`, `highlights_atleta_lnk` (`highlights_partita_lnk` rimossa il 2026-10-24)
 - **Decisione presa (rivista il 2026-09-18):** `avversario` è un campo **`string`** libero. Era una
   relazione verso `api::squadra.squadra` dal 2026-09-05, ma quel content-type è stato rimosso (vedi
   [squadra.md](squadra.md) → Changelog) perché non ancora consumato da nessuna schermata reale.
@@ -49,7 +49,6 @@ Clip video dell'atleta dalle partite: gol, assist, azioni difensive.
 | `durataSecondi` | integer | no | il mock mostra "0:24" |
 | `tipo` | enumeration | no | `gol`, `assist`, `azione_difensiva`, `dribbling`, `parata` |
 | `avversario` | string | no | "vs Roma" |
-| `partita` | relation manyToOne → `api::partita.partita` | no | collega la clip alla partita |
 | `copertina` | media (single, images) | no | `cover` nel mock |
 | `clip` | media (single) **oppure** `clipUrl` string | sì | |
 | `inEvidenza` | boolean | no | forza la "Top clip"; altrimenti la più recente |
@@ -57,7 +56,6 @@ Clip video dell'atleta dalle partite: gol, assist, azioni difensive.
 ## Relazioni
 
 - `atleta` → manyToOne
-- `partita` → manyToOne (opzionale)
 
 ## Isolamento
 
@@ -87,3 +85,6 @@ Clip video dell'atleta dalle partite: gol, assist, azioni difensive.
 - **2026-09-18** — `avversario` torna a essere una **stringa libera**. Il content-type `squadra` è
   stato rimosso (mai consumato da `/highlights`, ancora mock) — vedi [squadra.md](squadra.md) →
   Changelog.
+- **2026-10-24** — rimossa la relazione opzionale `partita` (manyToOne → `api::partita.partita`):
+  quel content-type è stato sostituito da `calendario-partite`, dove le partite sono component e
+  non possono essere target di relazione. Il contesto della clip resta in `avversario` + `data`.

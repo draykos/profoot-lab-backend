@@ -458,6 +458,10 @@ export interface ApiAtletaAtleta extends Struct.CollectionTypeSchema {
         number
       >;
     avatar: Schema.Attribute.Media<'images'>;
+    calendarioPartite: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::calendario-partite.calendario-partite'
+    >;
     cognome: Schema.Attribute.String & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
@@ -502,6 +506,34 @@ export interface ApiAtletaAtleta extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCalendarioPartiteCalendarioPartite extends Struct.CollectionTypeSchema {
+  collectionName: 'calendari_partite';
+  info: {
+    description: 'Calendario partite di un atleta (uno per atleta): elenco delle partite con avversari, data/ora, stadio e competizione.';
+    displayName: 'Calendario partite';
+    pluralName: 'calendari-partite';
+    singularName: 'calendario-partite';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    atleta: Schema.Attribute.Relation<'oneToOne', 'api::atleta.atleta'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::calendario-partite.calendario-partite'
+    > &
+      Schema.Attribute.Private;
+    partite: Schema.Attribute.Component<'calendario.partita', true>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+  };
+}
+
 export interface ApiHighlightHighlight extends Struct.CollectionTypeSchema {
   collectionName: 'highlights';
   info: {
@@ -532,7 +564,6 @@ export interface ApiHighlightHighlight extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::highlight.highlight'> &
       Schema.Attribute.Private;
-    partita: Schema.Attribute.Relation<'manyToOne', 'api::partita.partita'>;
     publishedAt: Schema.Attribute.DateTime;
     tipo: Schema.Attribute.Enumeration<
       ['gol', 'assist', 'azione_difensiva', 'dribbling', 'parata']
@@ -613,52 +644,6 @@ export interface ApiInfortunioInfortunio extends Struct.CollectionTypeSchema {
       ]
     > &
       Schema.Attribute.Required;
-  };
-}
-
-export interface ApiPartitaPartita extends Struct.CollectionTypeSchema {
-  collectionName: 'partite';
-  info: {
-    description: 'Incontro del calendario: avversari, data/ora, stadio, competizione.';
-    displayName: 'Partita';
-    pluralName: 'partite';
-    singularName: 'partita';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    competizione: Schema.Attribute.Enumeration<
-      ['serie_a', 'champions', 'coppa_italia', 'amichevole']
-    >;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
-    dataOra: Schema.Attribute.DateTime & Schema.Attribute.Required;
-    golCasa: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      >;
-    golTrasferta: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      >;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::partita.partita'> &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    squadraCasa: Schema.Attribute.String;
-    squadraTrasferta: Schema.Attribute.String;
-    stadio: Schema.Attribute.String;
-    stato: Schema.Attribute.Enumeration<['in_programma', 'giocata', 'rinviata']> &
-      Schema.Attribute.DefaultTo<'in_programma'>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
   };
 }
 
@@ -1194,9 +1179,9 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::allenamento.allenamento': ApiAllenamentoAllenamento;
       'api::atleta.atleta': ApiAtletaAtleta;
+      'api::calendario-partite.calendario-partite': ApiCalendarioPartiteCalendarioPartite;
       'api::highlight.highlight': ApiHighlightHighlight;
       'api::infortunio.infortunio': ApiInfortunioInfortunio;
-      'api::partita.partita': ApiPartitaPartita;
       'api::piano-alimentare.piano-alimentare': ApiPianoAlimentarePianoAlimentare;
       'api::test-fisico.test-fisico': ApiTestFisicoTestFisico;
       'api::video-coach.video-coach': ApiVideoCoachVideoCoach;
