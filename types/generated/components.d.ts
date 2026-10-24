@@ -31,6 +31,29 @@ export interface CalendarioPartita extends Struct.ComponentSchema {
   };
 }
 
+export interface CoachVideo extends Struct.ComponentSchema {
+  collectionName: 'components_coach_video';
+  info: {
+    description: "Un video coach dell'atleta: titolo, giorno, categoria, durata e link al video su Bunny Stream.";
+    displayName: 'Video';
+  };
+  attributes: {
+    categoria: Schema.Attribute.Enumeration<
+      ['pre_partita', 'focus', 'sonno', 'stress', 'recupero']
+    >;
+    data: Schema.Attribute.Date & Schema.Attribute.Required;
+    durataMinuti: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+    titolo: Schema.Attribute.String & Schema.Attribute.Required;
+    video: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface DietaGiorniSettimana extends Struct.ComponentSchema {
   collectionName: 'components_dieta_giorni_settimana';
   info: {
@@ -98,6 +121,7 @@ declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
       'calendario.partita': CalendarioPartita;
+      'coach.video': CoachVideo;
       'dieta.giorni-settimana': DietaGiorniSettimana;
       'dieta.pasto': DietaPasto;
     }

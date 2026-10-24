@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_coach_video",
+  "info": {
+    "displayName": "Video",
+    "description": "Un video coach dell'atleta: titolo, giorno, categoria, durata e link al video su Bunny Stream."
+  },
+  "options": {},
+  "attributes": {
+    "titolo": {
+      "type": "string",
+      "required": true
+    },
+    "data": {
+      "type": "date",
+      "required": true
+    },
+    "categoria": {
+      "type": "enumeration",
+      "enum": ["pre_partita", "focus", "sonno", "stress", "recupero"]
+    },
+    "durataMinuti": {
+      "type": "integer",
+      "min": 1
+    },
+    "video": {
+      "type": "string",
+      "required": true,
+      "regex": "^https?://[^\\s]+$"
+    }
+  }
+}
