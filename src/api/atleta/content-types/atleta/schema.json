@@ -102,6 +102,12 @@
       "relation": "oneToMany",
       "target": "api::video-coach.video-coach",
       "mappedBy": "atleta"
+    },
+    "calendarioPartite": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::calendario-partite.calendario-partite",
+      "mappedBy": "atleta"
     }
   }
 }

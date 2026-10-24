@@ -1,16 +1,10 @@
 {
-  "kind": "collectionType",
-  "collectionName": "partite",
+  "collectionName": "components_calendario_partite",
   "info": {
-    "singularName": "partita",
-    "pluralName": "partite",
     "displayName": "Partita",
-    "description": "Incontro del calendario: avversari, data/ora, stadio, competizione."
+    "description": "Una partita del calendario dell'atleta: avversari, data/ora, stadio, competizione, stato e risultato."
   },
-  "options": {
-    "draftAndPublish": false
-  },
-  "pluginOptions": {},
+  "options": {},
   "attributes": {
     "squadraCasa": {
       "type": "string"

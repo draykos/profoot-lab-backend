@@ -27,7 +27,7 @@ file.
 | 4 | Piano alimentare | [piano-alimentare.md](piano-alimentare.md) | collection | ✅ | `/diet`, `/` (riepilogo kcal) |
 | 5 | Test fisico | [test-fisico.md](test-fisico.md) | collection | ✅ | `/test` |
 | 6 | Infortunio | [infortunio.md](infortunio.md) | collection | ✅ | `/body`, `/` (alert corpo) |
-| 7 | Partita | [partita.md](partita.md) | collection | ✅ | `/matches`, `/` (prossima partita) |
+| 7 | ~~Partita~~ → Calendario partite | [calendario-partite.md](calendario-partite.md) ([partita.md](partita.md) rimosso) | collection | ✅ | `/matches`, `/` (prossima partita) — vedi nota³ |
 | 8 | Video Coach | [video-coach.md](video-coach.md) | collection | ✅ | `/training`, `/` (video del giorno) — vedi nota¹ |
 | 9 | Highlight | [highlight.md](highlight.md) | collection | ✅ | `/highlights` |
 | 10 | Membro staff | [membro-staff.md](membro-staff.md) | collection | 📝 (opzionale) | `/training` (attribuzioni) |
@@ -42,8 +42,12 @@ un piano più strutturato). Vedi `video-coach.md` → Changelog.
 `partita.squadraCasa`/`squadraTrasferta` e `highlight.avversario` sono ora campi `string` liberi
 invece di relazioni.
 
+³ **Nota 2026-10-24:** il catalogo condiviso `partita` è stato sostituito da `calendario-partite`:
+un calendario **per atleta** (oneToOne) con le partite come component ripetibile `calendario.partita`,
+letto via `GET /api/calendario-partite/me`. Rimossa anche `highlight.partita`.
+
 La **dashboard** (`/`) non ha un content-type dedicato: è un'aggregazione di *Allenamento* (di oggi),
-*Partita* (prossima) e *Infortunio* (stato attivo). Vedi note in fondo.
+*Calendario partite* (prossima) e *Infortunio* (stato attivo). Vedi note in fondo.
 
 ## Decisioni trasversali
 
@@ -59,14 +63,15 @@ conseguenza.
 
 Strapi **non ha row-level security**. Dare a un ruolo il permesso `find` su un content-type espone
 **tutte** le righe. Per i dati privati del singolo atleta (`piano-alimentare`, `test-fisico`,
-`infortunio`, `highlight`, `video-coach`, e il profilo `atleta`) serve **una delle
+`infortunio`, `highlight`, `video-coach`, `calendario-partite`, e il profilo `atleta`) serve **una delle
 seguenti**:
 
 - una **policy** / middleware che forza `filters[atleta][user][id] = ctx.state.user.id`;
 - un **controller custom** che sovrascrive `find`/`findOne`;
 - servire tutto tramite `GET /api/users/me?populate=...` (l'atleta legge solo il proprio grafo).
 
-Per i **cataloghi condivisi** (`partita`) il permesso `find`/`findOne` semplice è sufficiente.
+Per i **cataloghi condivisi** il permesso `find`/`findOne` semplice è sufficiente (dal 2026-10-24
+non ne resta nessuno: `partita` è diventato `calendario-partite`, per atleta).
 
 Ogni file indica nella sezione *Isolamento* se il content-type è privato o condiviso.
 
@@ -194,3 +199,11 @@ read-only), salvo eccezioni annotate.
   `atleta.squadra.nome` era effettivamente consumato dal frontend (`/profile`); gli altri due erano
   ancora mock a stringhe. Dati in DB trascurabili. Le tre relazioni sono diventate campi `string`
   liberi. Vedi `squadra.md` → Changelog per il dettaglio.
+
+- **2026-10-24** — **`partita` → `calendario-partite`.** Le partite diventano per atleta: nuovo
+  `api::calendario-partite.calendario-partite` (oneToOne con `atleta`, un calendario per atleta)
+  con component ripetibile `calendario.partita` (stessi campi della vecchia `partita`), gestito in
+  backoffice come `piano-alimentare` (scegli l'atleta, aggiungi le partite). Endpoint
+  `GET /api/calendario-partite/me` (partite ordinate per `dataOra`). Rimossi `api::partita.partita`,
+  i suoi permessi `find`/`findOne` per l'Atleta e la relazione `highlight.partita`. Doc:
+  `calendario-partite.md`.
