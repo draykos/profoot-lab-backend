@@ -11,6 +11,11 @@
   come da proposta (niente content-type `pasto` separato)
 - Tabelle DB verificate: `piani_alimentari`, `piani_alimentari_atleta_lnk`,
   `piani_alimentari_cmps` (join table del component), `components_dieta_pasti`
+- `titolo` (string, `required`) è l'**Entry title** del backoffice (prima l'admin mostrava il
+  `documentId`, non essendoci campi string). Impostato in `bootstrap()` (`ensureEntryTitles` in
+  `src/index.ts`) perché la configurazione della vista sta nel DB, non nel codice. I piani già
+  esistenti ricevono il placeholder `"Dieta 1"` dalla migration
+  `database/migrations/2026.11.22T00.00.00.piano-alimentare-titolo.js`, da correggere a mano.
 - `pasti` **non `required`** a livello di schema (un piano può nascere senza pasti e crescere dopo)
 - **Nessun target memorizzato** (2026-10-12): rimossi `obiettivoKcal`, `targetCarboidratiG`,
   `targetProteineG`, `targetGrassiG`. Kcal e macro totali mostrati in UI sono la **somma dei
@@ -49,6 +54,7 @@ Piano nutrizionale giornaliero dell'atleta: obiettivo calorico, macro e lista pa
 
 | Campo | Tipo Strapi | Obbligatorio | Note |
 | --- | --- | --- | --- |
+| `titolo` | string | sì | Entry title nel backoffice, es. "Dieta ottobre" |
 | `atleta` | relation manyToOne → `api::atleta.atleta` | sì | |
 | `validoDal` | date | sì | un piano attivo per data |
 | `validoAl` | date | no | null = ancora valido |
@@ -120,3 +126,5 @@ policy di ownership; mai `find` aperto.
 - **2026-10-12** — aggiunto il component `dieta.giorni-settimana` (campo `giorni` su `dieta.pasto`):
   il piano diventa una settimana tipo ripetuta. Pasti senza `giorni` valgono per tutti i giorni.
   L'endpoint `me` popola `pasti.giorni`.
+- **2026-11-22** — aggiunto `titolo` (string, required) e impostato come Entry title del backoffice
+  via `bootstrap()`. Migration di backfill: i piani esistenti prendono `"Dieta 1"`.

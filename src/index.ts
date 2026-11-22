@@ -62,6 +62,36 @@ async function ensureAtletaPermissions({ strapi }: { strapi: Core.Strapi }) {
   }
 }
 
+/**
+ * Admin "Entry title" (content-manager `mainField`) to enforce per content-type. The view
+ * configuration lives in the database, not in code, so we set it at boot to have it applied on
+ * every environment (including production) without manual steps in the admin.
+ *
+ * Only overrides the `documentId` fallback Strapi picks when a type has no string field: if an
+ * admin later chooses a different title from "Configure the view", that choice is preserved.
+ */
+const ENTRY_TITLES: Record<string, string> = {
+  'api::piano-alimentare.piano-alimentare': 'titolo',
+};
+
+async function ensureEntryTitles({ strapi }: { strapi: Core.Strapi }) {
+  const contentTypes = strapi.plugin('content-manager').service('content-types');
+
+  for (const [uid, mainField] of Object.entries(ENTRY_TITLES)) {
+    const contentType = strapi.contentTypes[uid as keyof typeof strapi.contentTypes];
+    if (!contentType) continue;
+
+    const configuration = await contentTypes.findConfiguration(contentType);
+    if (configuration?.settings?.mainField !== 'documentId') continue;
+
+    await contentTypes.updateConfiguration(contentType, {
+      ...configuration,
+      settings: { ...configuration.settings, mainField },
+    });
+    strapi.log.info(`[bootstrap] Entry title of "${uid}" set to "${mainField}".`);
+  }
+}
+
 export default {
   /**
    * An asynchronous register function that runs before
@@ -80,5 +110,6 @@ export default {
    */
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await ensureAtletaPermissions({ strapi });
+    await ensureEntryTitles({ strapi });
   },
 };
