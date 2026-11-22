@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Navigate } from 'react-router-dom';
 import type { StrapiApp } from '@strapi/strapi/admin';
 import { ProfootLab } from './icons/ProfootLab';
+import { BodyMapPanel } from './panels/BodyMapPanel';
 
 // Key the Strapi admin uses to remember the interface language in the browser.
 const LANGUAGE_STORAGE_KEY = 'strapi-admin-language';
@@ -43,5 +44,12 @@ export default {
       element: <Navigate to="/profoot-lab/test-fisici" replace />,
     });
   },
-  bootstrap(_app: StrapiApp) {},
+  bootstrap(app: StrapiApp) {
+    // Infortunio edit view: preview of the anatomy map with the injury dot (click to place it).
+    // `apis` is typed as unknown on the generic plugin object.
+    const contentManager = app.getPlugin('content-manager').apis as {
+      addEditViewSidePanel: (panels: unknown[]) => void;
+    };
+    contentManager.addEditViewSidePanel([BodyMapPanel]);
+  },
 };

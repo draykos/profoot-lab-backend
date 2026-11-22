@@ -29,6 +29,17 @@
 
 Verificato: `GET /api/infortuni` e `GET /api/infortunio/me` senza token → `403` ✅.
 
+## Anteprima mappa corporea nell'admin
+
+La scheda di modifica di Infortunio ha un pannello laterale **Mappa corporea**
+(`src/admin/panels/BodyMapPanel.tsx`, registrato in `src/admin/app.tsx` con
+`addEditViewSidePanel`). Mostra le stesse immagini fronte/retro del frontend (copiate in
+`src/admin/assets/`) con il pallino in `posizioneTop`/`posizioneLeft`, colorato da `stato`; gli
+altri infortuni dello stesso atleta compaiono attenuati. Cliccando sull'immagine si compilano
+`posizioneTop`, `posizioneLeft` e `vista` nel form (va comunque salvato). La geometria (box 3:5,
+immagine `object-fit: contain`, coordinate in % del box) deve restare allineata a
+`profoot-lab-frontend/src/routes/body.tsx`: se cambiano le immagini o il box lì, aggiornare anche qui.
+
 ## ⚠️ Stesso incidente noto (relazione bidirezionale con `atleta`)
 
 Vedi [allenamento.md](allenamento.md) e [test-fisico.md](test-fisico.md) — stessa finestra di
@@ -110,3 +121,5 @@ ownership obbligatorio; considerare accesso anche per lo staff medico (ruolo ded
   per il ruolo Atleta.
 - **2026-09-14** — rimosso il campo `gravita`, ridondante con `stato`: il colore è ora derivato dal
   frontend a partire da `stato` (`attivo`→alert, `in_recupero`→warn, `risolto`→ok).
+- **2026-11-22** — aggiunto nell'admin il pannello "Mappa corporea" (anteprima fronte/retro con
+  pallini, clic per posizionare).
