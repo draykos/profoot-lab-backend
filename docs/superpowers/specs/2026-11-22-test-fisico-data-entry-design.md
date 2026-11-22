@@ -1,6 +1,6 @@
 # Test fisico — catalogo tipi + pagina admin di inserimento
 
-**Data:** 2026-11-22 · **Repo:** `profoot-lab-backend` · **Stato:** design da approvare · **Branch:** `feat/test-fisico-catalogo`
+**Data:** 2026-11-22 · **Repo:** `profoot-lab-backend` · **Stato:** implementato (2026-11-22) · **Branch:** `feat/test-fisico-catalogo`
 
 ## Perché
 
@@ -73,8 +73,9 @@ Seed iniziale dei 6 tipi esistenti (`squat_jump` cm su, `cmj` cm su, `sprint_20m
 - `populate` di `tipoTest` (campi `nome`, `codice`, `unita`, `direzioneMigliora`) così il client ha
   unità e direzione senza seconda chiamata.
 - Ordine invariato: `data` ascendente (per il grafico trend).
-- Permessi ruolo Atleta: invariati (`test-fisico.me`). Il catalogo non serve esporlo separatamente
-  perché arriva popolato; nessun nuovo permesso pubblico.
+- Permessi ruolo Atleta: invariati (`test-fisico.me`). Al ruolo Atleta si aggiunge `find`/`findOne` sul catalogo `tipo-test` (dato condiviso,
+  sola lettura): senza, la sanitizzazione dell'output toglie `tipoTest` dalla risposta di `me`.
+  Nessun nuovo permesso pubblico.
 
 ## Pagina admin "Inserimento test fisici"
 
@@ -138,3 +139,13 @@ Periodo: [dal __/__/____] [al __/__/____]
 ## Domande aperte
 
 Nessuna.
+
+## Note di implementazione (2026-11-22)
+
+- Voce di menu rinominata **"Aggiungi Test Fisico"** su richiesta dell'utente (la route resta
+  `/admin/inserimento-test`); icona manubrio disegnata ad hoc in `src/admin/icons/Dumbbell.tsx`
+  perché `@strapi/icons` non ha icone fitness.
+- Permessi Atleta: aggiunto `find`/`findOne` su `tipo-test` (vedi sopra), scostamento dal design
+  iniziale che prevedeva nessun nuovo permesso.
+- Il filtro `?tipo=` di `me` funziona senza dichiarare parametri extra nella rotta nonostante
+  `api.rest.strictParams: true`.

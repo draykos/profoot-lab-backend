@@ -31,7 +31,7 @@ file.
 | 8 | Video Coach | [video-coach.md](video-coach.md) | collection | ✅ | `/training`, `/` (video del giorno) — vedi nota¹ |
 | 9 | Highlight | [highlight.md](highlight.md) | collection | ✅ | `/highlights` |
 | 10 | Membro staff | [membro-staff.md](membro-staff.md) | collection | 📝 (opzionale) | `/training` (attribuzioni) |
-| 11 | Tipo test | [tipo-test.md](tipo-test.md) | collection | ✅ | `/test` (via `test-fisico`), pagina admin "Inserimento test" |
+| 11 | Tipo test | [tipo-test.md](tipo-test.md) | collection | ✅ | `/test` (via `test-fisico`), pagina admin "Aggiungi Test Fisico" |
 
 ¹ **Nota 2026-09-14:** `/mental` (placeholder work-in-progress) non consuma più questa entità — i
 video di `video-coach` alimentano `/training`, la stessa route pianificata per `allenamento` (riga

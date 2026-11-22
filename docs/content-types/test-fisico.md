@@ -11,7 +11,8 @@
 - **Decisione presa (2026-11-22):** il tipo di test è una relazione `tipoTest` verso il catalogo
   [`tipo-test`](tipo-test.md) (sostituisce l'enum fisso `tipo` del 2026-09-05). `unita` e
   `direzioneMigliora` sono proprietà del tipo, non più della singola misurazione.
-- Inserimento dal backoffice: pagina admin "Inserimento test" (vedi
+- Inserimento dal backoffice: pagina admin **"Aggiungi Test Fisico"** (menu laterale, icona
+  manubrio; route `/admin/inserimento-test`) — vedi
   `docs/superpowers/specs/2026-11-22-test-fisico-data-entry-design.md`).
 
 ## Endpoint creato
