@@ -12,6 +12,10 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "titolo": {
+      "type": "string",
+      "required": true
+    },
     "atleta": {
       "type": "relation",
       "relation": "manyToOne",

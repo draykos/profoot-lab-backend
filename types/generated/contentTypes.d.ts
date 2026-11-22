@@ -671,6 +671,7 @@ export interface ApiPianoAlimentarePianoAlimentare extends Struct.CollectionType
     note: Schema.Attribute.Text;
     pasti: Schema.Attribute.Component<'dieta.pasto', true>;
     publishedAt: Schema.Attribute.DateTime;
+    titolo: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
     validoAl: Schema.Attribute.Date;
