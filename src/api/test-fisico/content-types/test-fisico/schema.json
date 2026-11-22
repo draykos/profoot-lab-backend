@@ -18,18 +18,14 @@
       "target": "api::atleta.atleta",
       "inversedBy": "testFisici"
     },
-    "tipo": {
-      "type": "enumeration",
-      "enum": ["squat_jump", "cmj", "sprint_20m", "sprint_30m", "yoyo_ir1", "illinois"],
-      "required": true
+    "tipoTest": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::tipo-test.tipo-test",
+      "inversedBy": "testFisici"
     },
     "valore": {
       "type": "decimal",
-      "required": true
-    },
-    "unita": {
-      "type": "enumeration",
-      "enum": ["cm", "s", "m"],
       "required": true
     },
     "data": {
@@ -38,10 +34,6 @@
     },
     "note": {
       "type": "text"
-    },
-    "direzioneMigliora": {
-      "type": "enumeration",
-      "enum": ["su", "giu"]
     }
   }
 }

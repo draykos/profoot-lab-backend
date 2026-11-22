@@ -8,9 +8,11 @@ export default factories.createCoreController('api::test-fisico.test-fisico', ({
   /**
    * GET /api/test-fisico/me[?tipo=squat_jump]
    *
-   * Storico dei test fisici dell'atleta collegato all'utente autenticato, dal più vecchio al più
-   * recente (comodo per il grafico trend). `tipo` è un filtro opzionale sull'enum; qualunque altro
-   * filtro/populate del client viene ignorato — lo scoping è sempre sull'atleta della richiesta.
+   * Physical test history of the athlete linked to the authenticated user, oldest first (handy
+   * for the trend chart). `tipo` is an optional filter on the `codice` of the test type catalog
+   * (`api::tipo-test.tipo-test`); each item comes with its `tipoTest` populated (name, code, unit,
+   * improvement direction). Any other client filter/populate is ignored — scoping is always on
+   * the requesting athlete.
    */
   async me(ctx) {
     const userId = ctx.state.user?.id;
@@ -26,12 +28,13 @@ export default factories.createCoreController('api::test-fisico.test-fisico', ({
     const { tipo } = ctx.query as { tipo?: string };
     const filters: Record<string, unknown> = { atleta: { id: atleta.id } };
     if (typeof tipo === 'string' && tipo.length > 0) {
-      filters.tipo = tipo;
+      filters.tipoTest = { codice: tipo };
     }
 
     const testFisici = await strapi.documents('api::test-fisico.test-fisico').findMany({
       filters,
       sort: { data: 'asc' },
+      populate: { tipoTest: { fields: ['nome', 'codice', 'unita', 'direzioneMigliora'] } },
     });
 
     const contentType = strapi.contentType('api::test-fisico.test-fisico');

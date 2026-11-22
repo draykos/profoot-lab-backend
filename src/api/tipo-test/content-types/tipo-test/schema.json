@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tipi_test",
+  "info": {
+    "singularName": "tipo-test",
+    "pluralName": "tipi-test",
+    "displayName": "Tipo test",
+    "description": "Catalogo dei tipi di test fisico: nome, unità di misura e direzione di miglioramento."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nome": {
+      "type": "string",
+      "required": true
+    },
+    "codice": {
+      "type": "uid",
+      "targetField": "nome",
+      "required": true
+    },
+    "unita": {
+      "type": "enumeration",
+      "enum": ["cm", "s", "m"],
+      "required": true
+    },
+    "direzioneMigliora": {
+      "type": "enumeration",
+      "enum": ["su", "giu"],
+      "required": true
+    },
+    "testFisici": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::test-fisico.test-fisico",
+      "mappedBy": "tipoTest"
+    }
+  }
+}

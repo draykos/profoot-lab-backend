@@ -695,20 +695,43 @@ export interface ApiTestFisicoTestFisico extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
     data: Schema.Attribute.Date & Schema.Attribute.Required;
-    direzioneMigliora: Schema.Attribute.Enumeration<['su', 'giu']>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::test-fisico.test-fisico'> &
       Schema.Attribute.Private;
     note: Schema.Attribute.Text;
     publishedAt: Schema.Attribute.DateTime;
-    tipo: Schema.Attribute.Enumeration<
-      ['squat_jump', 'cmj', 'sprint_20m', 'sprint_30m', 'yoyo_ir1', 'illinois']
-    > &
-      Schema.Attribute.Required;
-    unita: Schema.Attribute.Enumeration<['cm', 's', 'm']> & Schema.Attribute.Required;
+    tipoTest: Schema.Attribute.Relation<'manyToOne', 'api::tipo-test.tipo-test'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
     valore: Schema.Attribute.Decimal & Schema.Attribute.Required;
+  };
+}
+
+export interface ApiTipoTestTipoTest extends Struct.CollectionTypeSchema {
+  collectionName: 'tipi_test';
+  info: {
+    description: 'Catalogo dei tipi di test fisico: nome, unit\u00E0 di misura e direzione di miglioramento.';
+    displayName: 'Tipo test';
+    pluralName: 'tipi-test';
+    singularName: 'tipo-test';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    codice: Schema.Attribute.UID<'nome'> & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    direzioneMigliora: Schema.Attribute.Enumeration<['su', 'giu']> & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::tipo-test.tipo-test'> &
+      Schema.Attribute.Private;
+    nome: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    testFisici: Schema.Attribute.Relation<'oneToMany', 'api::test-fisico.test-fisico'>;
+    unita: Schema.Attribute.Enumeration<['cm', 's', 'm']> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
   };
 }
 
@@ -1176,6 +1199,7 @@ declare module '@strapi/strapi' {
       'api::infortunio.infortunio': ApiInfortunioInfortunio;
       'api::piano-alimentare.piano-alimentare': ApiPianoAlimentarePianoAlimentare;
       'api::test-fisico.test-fisico': ApiTestFisicoTestFisico;
+      'api::tipo-test.tipo-test': ApiTipoTestTipoTest;
       'api::video-coach-atleta.video-coach-atleta': ApiVideoCoachAtletaVideoCoachAtleta;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
