@@ -215,3 +215,5 @@ read-only), salvo eccezioni annotate.
   `video_coach_atleti` (la vecchia `video_coach` viene eliminata). Vedi `video-coach.md`.
 - **2026-11-22** — creato `tipo-test` (`api::tipo-test.tipo-test`), catalogo dei tipi di test fisico
   gestito dall'admin, con seed dei 6 tipi esistenti in `bootstrap()`.
+- **2026-11-22** — `test-fisico`: enum `tipo` sostituito dalla relazione `tipoTest` verso
+  `tipo-test`; `unita` e `direzioneMigliora` passano sul catalogo. Endpoint `me` aggiornato.

@@ -30,6 +30,12 @@
       "type": "enumeration",
       "enum": ["su", "giu"],
       "required": true
+    },
+    "testFisici": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::test-fisico.test-fisico",
+      "mappedBy": "tipoTest"
     }
   }
 }

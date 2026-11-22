@@ -7,22 +7,28 @@
 - File: `src/api/test-fisico/content-types/test-fisico/schema.json` (+ factory
   `controllers/routes/services`)
 - UID: `api::test-fisico.test-fisico` · tabella `test_fisici` · `draftAndPublish: false`
-- Tabelle DB verificate: `test_fisici`, `test_fisici_atleta_lnk`
-- **Decisione presa:** `tipo` come **enum fisso** (non content-type `tipo-test` separato) — coerente
-  con l'approccio "parti semplice" del resto del modello
-- `direzioneMigliora` incluso come campo esplicito e opzionale, come da proposta
+- Tabelle DB verificate: `test_fisici`, `test_fisici_atleta_lnk`, `test_fisici_tipo_test_lnk`
+- **Decisione presa (2026-11-22):** il tipo di test è una relazione `tipoTest` verso il catalogo
+  [`tipo-test`](tipo-test.md) (sostituisce l'enum fisso `tipo` del 2026-09-05). `unita` e
+  `direzioneMigliora` sono proprietà del tipo, non più della singola misurazione.
+- Inserimento dal backoffice: pagina admin "Inserimento test" (vedi
+  `docs/superpowers/specs/2026-11-22-test-fisico-data-entry-design.md`).
 
 ## Endpoint creato
 
 `GET /api/test-fisico/me[?tipo=squat_jump]` — stesso pattern di `allenamento.me`: risolve l'atleta
 via `strapi.service('api::atleta.atleta').findForUser(userId)`, filtra per `atleta.id`, ordina per
-`data` **ascendente** (comodo per il grafico trend). `tipo` è un filtro opzionale sull'enum; nessun
-altro filtro/populate accettato dal client.
+`data` **ascendente** (comodo per il grafico trend). `tipo` è un filtro opzionale sul **`codice`**
+del catalogo (`tipoTest.codice`); nessun altro filtro/populate accettato dal client. Ogni elemento
+ha `tipoTest` popolato con `nome`, `codice`, `unita`, `direzioneMigliora`.
 
-Permessi seedati in `bootstrap()`: solo `api::test-fisico.test-fisico.me` per il ruolo Atleta —
-niente `find`/`findOne` (dato privato).
+Permessi seedati in `bootstrap()`: `api::test-fisico.test-fisico.me` per il ruolo Atleta — niente
+`find`/`findOne` (dato privato). In più `find`/`findOne` sul catalogo `tipo-test` (dato condiviso):
+senza, la sanitizzazione dell'output toglie `tipoTest` dalla risposta di `me`.
 
 Verificato: `GET /api/test-fisici` e `GET /api/test-fisico/me` senza token → `403` ✅.
+Verificato 2026-11-22 (locale): `me` con token → misurazioni con `tipoTest` popolato; `?tipo=cmj` →
+solo CMJ; `?tipo=inesistente` → `[]` ✅.
 
 ## ⚠️ Stesso incidente di `allenamento`
 
@@ -58,26 +64,18 @@ di test compongono il trend mostrato nel grafico.
 | Campo | Tipo Strapi | Obbligatorio | Note |
 | --- | --- | --- | --- |
 | `atleta` | relation manyToOne → `api::atleta.atleta` | sì | |
-| `tipo` | enumeration | sì | `squat_jump`, `cmj`, `sprint_20m`, `sprint_30m`, `yoyo_ir1`, `illinois` (estendibile) |
-| `valore` | decimal | sì | |
-| `unita` | enumeration | sì | `cm`, `s`, `m` — deducibile da `tipo`, ma esplicito è più robusto |
+| `tipoTest` | relation manyToOne → `api::tipo-test.tipo-test` | sì (imposto dalla pagina admin) | nome, unità e direzione di miglioramento vengono dal tipo |
+| `valore` | decimal | sì | nell'unità del tipo |
 | `data` | date | sì | ordina il trend |
 | `note` | text | no | |
-| `direzioneMigliora` | enumeration | no | `su` / `giu` — se un valore più basso è meglio (sprint); in alternativa dedotto da `tipo` |
 
 Il "delta vs prec." e la percentuale sono **calcolati** confrontando le due misurazioni più recenti
-dello stesso `tipo` per lo stesso `atleta` — non memorizzati.
-
-## Alternativa: catalogo `tipo-test`
-
-Invece dell'enum, un content-type `api::tipo-test.tipo-test` con `nome`, `unita`,
-`direzioneMigliora`, `descrizione`. Più flessibile se lo staff aggiunge test spesso. Proposta:
-**enum** per partire, migrazione a content-type se serve.
+dello stesso `tipoTest` per lo stesso `atleta` — non memorizzati.
 
 ## Relazioni
 
 - `atleta` → manyToOne
-- eventuale `tipoTest` → manyToOne (se si sceglie il catalogo)
+- `tipoTest` → manyToOne verso `tipo-test` (inverso `tipo-test.testFisici`)
 
 ## Isolamento
 
@@ -93,8 +91,8 @@ Invece dell'enum, un content-type `api::tipo-test.tipo-test` con `nome`, `unita`
 
 ## Decisioni aperte
 
-- Enum `tipo` vs content-type `tipo-test`.
-- `direzioneMigliora` esplicito o derivato.
+- ~~Enum `tipo` vs content-type `tipo-test`~~ — **chiuso: catalogo** (2026-11-22).
+- ~~`direzioneMigliora` esplicito o derivato~~ — **chiuso: dal tipo di test** (2026-11-22).
 - Serve un raggruppamento "sessione di test" (una data, molti test insieme) per la UI? Oggi il mock
   li tratta come righe indipendenti.
 - Valori di riferimento/benchmark per ruolo da mostrare come confronto?
@@ -105,3 +103,7 @@ Invece dell'enum, un content-type `api::tipo-test.tipo-test` con `nome`, `unita`
 - **2026-09-05** — creato lo schema `api::test-fisico.test-fisico` (decisione chiusa: enum `tipo`
   fisso). Creato l'endpoint `me` (con filtro opzionale `?tipo=`) e seedato il permesso per il ruolo
   Atleta.
+- **2026-11-22** — l'enum `tipo` diventa la relazione `tipoTest` verso il nuovo catalogo
+  [`tipo-test`](tipo-test.md); rimossi `tipo`, `unita`, `direzioneMigliora` (nessun dato in locale né
+  in produzione, nessuna migration). `me`: `?tipo=` filtra su `tipoTest.codice` e `tipoTest` è
+  popolato; aggiunto al ruolo Atleta `find`/`findOne` sul catalogo.

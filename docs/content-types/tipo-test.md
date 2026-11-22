@@ -42,7 +42,12 @@ Nota: un tipo di default eliminato dall'admin viene ricreato al riavvio successi
 
 ## Permessi ruolo Atleta
 
-Nessuno: il catalogo arriva già popolato dentro `GET /api/test-fisico/me` (campo `tipoTest`).
+| Azione | Abilitare |
+| --- | --- |
+| `find`, `findOne` | sì — catalogo condiviso, sola lettura. Necessario anche perché `tipoTest` sopravviva alla sanitizzazione dell'output di `GET /api/test-fisico/me` |
+| `create`, `update`, `delete` | no |
+
+Seedati in `bootstrap()` (`ATLETA_ACTIONS` in `src/index.ts`). Il ruolo Public non ha accesso.
 
 ## Changelog
 

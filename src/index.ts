@@ -19,6 +19,10 @@ const ATLETA_ACTIONS = [
   // test-fisico: storico misurazioni per singolo atleta, dato privato — solo `me`
   // (vedi docs/content-types/test-fisico.md)
   'api::test-fisico.test-fisico.me',
+  // tipo-test: shared catalog of test types, not private — read-only. Also required for
+  // `tipoTest` to survive output sanitization in `test-fisico.me` (see docs/content-types/tipo-test.md)
+  'api::tipo-test.tipo-test.find',
+  'api::tipo-test.tipo-test.findOne',
   // infortunio: dato sanitario per singolo atleta, privato — solo `me`
   // (vedi docs/content-types/infortunio.md)
   'api::infortunio.infortunio.me',
@@ -125,7 +129,7 @@ export default {
    *
    * This gives you an opportunity to extend code.
    */
-  register(/* { strapi }: { strapi: Core.Strapi } */) {},
+  register() {},
 
   /**
    * An asynchronous bootstrap function that runs before

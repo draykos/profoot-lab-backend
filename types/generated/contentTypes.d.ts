@@ -695,17 +695,12 @@ export interface ApiTestFisicoTestFisico extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
     data: Schema.Attribute.Date & Schema.Attribute.Required;
-    direzioneMigliora: Schema.Attribute.Enumeration<['su', 'giu']>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::test-fisico.test-fisico'> &
       Schema.Attribute.Private;
     note: Schema.Attribute.Text;
     publishedAt: Schema.Attribute.DateTime;
-    tipo: Schema.Attribute.Enumeration<
-      ['squat_jump', 'cmj', 'sprint_20m', 'sprint_30m', 'yoyo_ir1', 'illinois']
-    > &
-      Schema.Attribute.Required;
-    unita: Schema.Attribute.Enumeration<['cm', 's', 'm']> & Schema.Attribute.Required;
+    tipoTest: Schema.Attribute.Relation<'manyToOne', 'api::tipo-test.tipo-test'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
     valore: Schema.Attribute.Decimal & Schema.Attribute.Required;
@@ -733,6 +728,7 @@ export interface ApiTipoTestTipoTest extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     nome: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    testFisici: Schema.Attribute.Relation<'oneToMany', 'api::test-fisico.test-fisico'>;
     unita: Schema.Attribute.Enumeration<['cm', 's', 'm']> & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
