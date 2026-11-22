@@ -1,6 +1,6 @@
 # Admin — sezione "Profoot Lab" con sottomenu
 
-**Data:** 2026-11-22 · **Repo:** `profoot-lab-backend` · **Stato:** approvato (2026-11-22) ·
+**Data:** 2026-11-22 · **Repo:** `profoot-lab-backend` · **Stato:** implementato (2026-11-22) ·
 **Branch:** `feat/admin-profoot-lab-section`
 
 ## Perché
@@ -50,7 +50,10 @@ nella barra laterale.
 - **Vecchio indirizzo** `/admin/inserimento-test` → reindirizza alla nuova sottopagina.
 - **Permessi:** la voce è visibile a chi può leggere Test fisico nel Content Manager (come oggi);
   i link ai contenuti portano a pagine che applicano già i permessi del ruolo.
-- **Icona:** variante **B — solo scarpino** (sagoma con tacchetti), scelta dall'utente tra due bozze.
+- **Icona:** pallone da calcio a contorno (variante **C**), scelta dall'utente dopo aver scartato lo
+  scarpino. Disegnata solo con `<path>` pieni: il menu di Strapi ricolora le icone su hover/attivo
+  con una regola CSS `svg path { fill }` e passa `fill` come nome di colore del tema
+  (`src/admin/icons/ProfootLab.tsx`).
 
 ## Lasciato al builder
 
