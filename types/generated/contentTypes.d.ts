@@ -396,46 +396,6 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiAllenamentoAllenamento extends Struct.CollectionTypeSchema {
-  collectionName: 'allenamenti';
-  info: {
-    description: 'Sessione video di allenamento assegnata a un singolo atleta per un giorno specifico.';
-    displayName: 'Allenamento';
-    pluralName: 'allenamenti';
-    singularName: 'allenamento';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    atleta: Schema.Attribute.Relation<'manyToOne', 'api::atleta.atleta'>;
-    categoria: Schema.Attribute.Enumeration<
-      ['forza', 'attivazione', 'defaticamento', 'velocita', 'core', 'condizionamento', 'recupero']
-    >;
-    copertina: Schema.Attribute.Media<'images'>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
-    data: Schema.Attribute.Date & Schema.Attribute.Required;
-    descrizione: Schema.Attribute.Text;
-    durataMinuti: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 1;
-        },
-        number
-      >;
-    intensita: Schema.Attribute.Enumeration<['alta', 'media', 'bassa']>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::allenamento.allenamento'> &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    titolo: Schema.Attribute.String & Schema.Attribute.Required;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
-    video: Schema.Attribute.Media<'videos'>;
-  };
-}
-
 export interface ApiAtletaAtleta extends Struct.CollectionTypeSchema {
   collectionName: 'atleti';
   info: {
@@ -448,7 +408,6 @@ export interface ApiAtletaAtleta extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
-    allenamenti: Schema.Attribute.Relation<'oneToMany', 'api::allenamento.allenamento'>;
     altezzaCm: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
         {
@@ -1192,7 +1151,6 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::allenamento.allenamento': ApiAllenamentoAllenamento;
       'api::atleta.atleta': ApiAtletaAtleta;
       'api::calendario-partite.calendario-partite': ApiCalendarioPartiteCalendarioPartite;
       'api::highlight.highlight': ApiHighlightHighlight;

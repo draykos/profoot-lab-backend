@@ -67,12 +67,6 @@
     "squadra": {
       "type": "string"
     },
-    "allenamenti": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::allenamento.allenamento",
-      "mappedBy": "atleta"
-    },
     "testFisici": {
       "type": "relation",
       "relation": "oneToMany",
