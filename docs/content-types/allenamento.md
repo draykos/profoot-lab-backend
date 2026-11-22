@@ -1,6 +1,7 @@
 # Allenamento
 
-**Stato:** ✅ Creato
+**Stato:** ❌ Rimosso (2026-11-22) — mai usato dal frontend: `/training` è alimentato da
+[`video-coach`](video-coach.md). Vedi Changelog in fondo; il resto di questo file è storico.
 
 ## Decisione presa (2026-09-05)
 
@@ -126,3 +127,7 @@ Finché non è chiaro, si parte con **catalogo condiviso per `data`**.
 - **2026-09-05** — decisione chiusa: piano **per singolo atleta**. Creato lo schema
   `api::allenamento.allenamento`, l'endpoint `me` e il service condiviso `findForUser` su `atleta`.
   Seedato il permesso `me` per il ruolo Atleta.
+- **2026-11-22** — **rimosso** il content-type `api::allenamento.allenamento` (cartella
+  `src/api/allenamento`, relazione inversa `atleta.allenamenti`, permesso `me` nel seed di
+  `bootstrap()`). Nessun dato (0 righe in locale). Decisione aperta della nota¹ del README chiusa a
+  favore di `video-coach`.

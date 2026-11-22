@@ -13,9 +13,6 @@ const ATLETA_ROLE_TYPE = 'atleta';
 const ATLETA_ACTIONS = [
   'plugin::users-permissions.user.me',
   'api::atleta.atleta.me',
-  // allenamento: piano per singolo atleta, dato privato — solo l'azione self-scoped `me`,
-  // mai `find`/`findOne` aperti (vedi docs/content-types/allenamento.md)
-  'api::allenamento.allenamento.me',
   // test-fisico: storico misurazioni per singolo atleta, dato privato — solo `me`
   // (vedi docs/content-types/test-fisico.md)
   'api::test-fisico.test-fisico.me',

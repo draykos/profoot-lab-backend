@@ -1,7 +1,6 @@
 # Atleta
 
-**Stato:** ✅ Creato — schema, endpoint `me`, permessi Atleta seedati, relazione `allenamenti`
-collegata (`squadra` è un campo string libero dal 2026-09-18, vedi Changelog)
+**Stato:** ✅ Creato — schema, endpoint `me`, permessi Atleta seedati (`squadra` è un campo string libero dal 2026-09-18, vedi Changelog)
 
 ## Schema reale creato
 
@@ -27,7 +26,6 @@ collegata (`squadra` è un campo string libero dal 2026-09-18, vedi Changelog)
 | `proStatus` | boolean | default `true` | — |
 | `avatar` | media single | solo `images` | — |
 | `squadra` | string | — | fino al 2026-09-18 era relation manyToOne → `api::squadra.squadra` (vedi [squadra.md](squadra.md)); rimosso il content-type, ora stringa libera |
-| `allenamenti` | relation oneToMany → `api::allenamento.allenamento` | — | ✅ reverse della relazione required su `allenamento` (piano per singolo atleta) |
 | `testFisici` | relation oneToMany → `api::test-fisico.test-fisico` | — | ✅ reverse della relazione su `test-fisico` |
 | `infortuni` | relation oneToMany → `api::infortunio.infortunio` | — | ✅ reverse della relazione su `infortunio` |
 | `pianiAlimentari` | relation oneToMany → `api::piano-alimentare.piano-alimentare` | — | ✅ reverse della relazione su `piano-alimentare` |
@@ -186,3 +184,5 @@ permesso). Non ancora testato con un JWT reale (nessun `atleta` collegato a `Tes
 - **2026-09-18** — `squadra` da relazione a **campo string libero** (rimosso il content-type
   `Squadra`, vedi [squadra.md](squadra.md) → Changelog). `GET /api/atleta/me` non popola più
   `squadra` (è uno scalare).
+- **2026-11-22** — rimossa la relazione `allenamenti` insieme al content-type `allenamento` (vedi
+  [allenamento.md](allenamento.md)).
