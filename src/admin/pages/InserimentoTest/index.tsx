@@ -52,6 +52,11 @@ const toIsoDate = (date: Date) =>
     date.getDate(),
   ).padStart(2, '0')}`;
 
+// The design-system DatePicker displays its `value` as a UTC calendar day but emits local midnight
+// from `onChange`. Dates are therefore kept as `YYYY-MM-DD` strings: read with `toIsoDate` on
+// change, and handed back as UTC midnight (`new Date('YYYY-MM-DD')`) so the field shows that day.
+const toPickerValue = (iso?: string) => (iso ? new Date(iso) : undefined);
+
 const formatIsoDate = (iso: string) => {
   const [year, month, day] = iso.split('-').map(Number);
   return dateFormatter.format(new Date(year, month - 1, day));
@@ -79,15 +84,15 @@ const InserimentoTestPage = () => {
   const [atletaId, setAtletaId] = React.useState<string>();
   const [tipoTestId, setTipoTestId] = React.useState<string>();
 
-  const [dal, setDal] = React.useState<Date>();
-  const [al, setAl] = React.useState<Date>();
+  const [dal, setDal] = React.useState<string>();
+  const [al, setAl] = React.useState<string>();
   const [page, setPage] = React.useState(1);
 
   const [misurazioni, setMisurazioni] = React.useState<Misurazione[]>([]);
   const [pagination, setPagination] = React.useState<Pagination>({ page: 1, pageCount: 1 });
   const [listLoading, setListLoading] = React.useState(false);
 
-  const [data, setData] = React.useState<Date>(() => new Date());
+  const [data, setData] = React.useState<string>(() => toIsoDate(new Date()));
   const [valore, setValore] = React.useState('');
   const [note, setNote] = React.useState('');
   const [valoreError, setValoreError] = React.useState<string>();
@@ -112,23 +117,24 @@ const InserimentoTestPage = () => {
       .finally(() => setCatalogsLoading(false));
   }, [get, notifyError]);
 
+  // Id of the latest list request: responses of superseded requests (e.g. the admin switched
+  // athlete before the previous list arrived) are dropped instead of overwriting the table.
+  const latestListRequest = React.useRef(0);
+
   const loadMisurazioni = React.useCallback(async () => {
     if (!atletaId || !tipoTestId) return;
+    const requestId = ++latestListRequest.current;
+    const isLatest = () => requestId === latestListRequest.current;
     setListLoading(true);
     try {
-      const result = await listMisurazioni(get, {
-        atletaId,
-        tipoTestId,
-        dal: dal ? toIsoDate(dal) : undefined,
-        al: al ? toIsoDate(al) : undefined,
-        page,
-      });
+      const result = await listMisurazioni(get, { atletaId, tipoTestId, dal, al, page });
+      if (!isLatest()) return;
       setMisurazioni(result.results);
       setPagination(result.pagination);
     } catch (error) {
-      notifyError(error);
+      if (isLatest()) notifyError(error);
     } finally {
-      setListLoading(false);
+      if (isLatest()) setListLoading(false);
     }
   }, [get, notifyError, atletaId, tipoTestId, dal, al, page]);
 
@@ -146,11 +152,11 @@ const InserimentoTestPage = () => {
     setPage(1);
   };
   const selectDal = (value?: Date) => {
-    setDal(value);
+    setDal(value ? toIsoDate(value) : undefined);
     setPage(1);
   };
   const selectAl = (value?: Date) => {
-    setAl(value);
+    setAl(value ? toIsoDate(value) : undefined);
     setPage(1);
   };
 
@@ -173,7 +179,7 @@ const InserimentoTestPage = () => {
       await createMisurazione(post, {
         atletaId,
         tipoTestId,
-        data: toIsoDate(data),
+        data,
         valore: parsed,
         note: note.trim() || undefined,
       });
@@ -256,8 +262,8 @@ const InserimentoTestPage = () => {
                         <Field.Root name="data" required>
                           <Field.Label>Data</Field.Label>
                           <DatePicker
-                            value={data}
-                            onChange={(value) => value && setData(value)}
+                            value={toPickerValue(data)}
+                            onChange={(value) => value && setData(toIsoDate(value))}
                             locale="it-IT"
                           />
                         </Field.Root>
@@ -302,7 +308,7 @@ const InserimentoTestPage = () => {
                     <Field.Root name="dal">
                       <Field.Label>Dal</Field.Label>
                       <DatePicker
-                        value={dal}
+                        value={toPickerValue(dal)}
                         onChange={selectDal}
                         onClear={() => selectDal(undefined)}
                         clearLabel="Rimuovi"
@@ -312,7 +318,7 @@ const InserimentoTestPage = () => {
                     <Field.Root name="al">
                       <Field.Label>Al</Field.Label>
                       <DatePicker
-                        value={al}
+                        value={toPickerValue(al)}
                         onChange={selectAl}
                         onClear={() => selectAl(undefined)}
                         clearLabel="Rimuovi"
