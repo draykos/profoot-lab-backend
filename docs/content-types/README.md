@@ -31,6 +31,7 @@ file.
 | 8 | Video Coach | [video-coach.md](video-coach.md) | collection | ✅ | `/training`, `/` (video del giorno) — vedi nota¹ |
 | 9 | Highlight | [highlight.md](highlight.md) | collection | ✅ | `/highlights` |
 | 10 | Membro staff | [membro-staff.md](membro-staff.md) | collection | 📝 (opzionale) | `/training` (attribuzioni) |
+| 11 | Tipo test | [tipo-test.md](tipo-test.md) | collection | ✅ | `/test` (via `test-fisico`), pagina admin "Inserimento test" |
 
 ¹ **Nota 2026-09-14:** `/mental` (placeholder work-in-progress) non consuma più questa entità — i
 video di `video-coach` alimentano `/training`, la stessa route pianificata per `allenamento` (riga
@@ -212,3 +213,5 @@ read-only), salvo eccezioni annotate.
   ripetibile `coach.video` dentro un "Video Coach" per atleta (oneToOne), stesso schema di
   backoffice di `piano-alimentare` e `calendario-partite`. Draft & Publish rimosso. Tabella nuova
   `video_coach_atleti` (la vecchia `video_coach` viene eliminata). Vedi `video-coach.md`.
+- **2026-11-22** — creato `tipo-test` (`api::tipo-test.tipo-test`), catalogo dei tipi di test fisico
+  gestito dall'admin, con seed dei 6 tipi esistenti in `bootstrap()`.

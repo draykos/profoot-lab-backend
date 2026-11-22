@@ -63,6 +63,32 @@ async function ensureAtletaPermissions({ strapi }: { strapi: Core.Strapi }) {
 }
 
 /**
+ * Default entries of the test type catalog (`api::tipo-test.tipo-test`). Idempotent: only the
+ * `codice` values not yet present are created, so admins can rename or edit seeded types freely.
+ * See docs/content-types/tipo-test.md.
+ */
+const TIPI_TEST_SEED = [
+  { codice: 'squat_jump', nome: 'Squat jump', unita: 'cm', direzioneMigliora: 'su' },
+  { codice: 'cmj', nome: 'CMJ', unita: 'cm', direzioneMigliora: 'su' },
+  { codice: 'sprint_20m', nome: 'Sprint 20 m', unita: 's', direzioneMigliora: 'giu' },
+  { codice: 'sprint_30m', nome: 'Sprint 30 m', unita: 's', direzioneMigliora: 'giu' },
+  { codice: 'yoyo_ir1', nome: 'Yo-Yo IR1', unita: 'm', direzioneMigliora: 'su' },
+  { codice: 'illinois', nome: 'Illinois agility', unita: 's', direzioneMigliora: 'giu' },
+] as const;
+
+async function ensureTipiTest({ strapi }: { strapi: Core.Strapi }) {
+  const tipiTest = strapi.documents('api::tipo-test.tipo-test');
+  const existing = await tipiTest.findMany({ fields: ['codice'] });
+  const existingCodici = new Set(existing.map((tipo) => tipo.codice));
+
+  for (const tipo of TIPI_TEST_SEED) {
+    if (existingCodici.has(tipo.codice)) continue;
+    await tipiTest.create({ data: { ...tipo } });
+    strapi.log.info(`[bootstrap] Tipo test "${tipo.codice}" creato.`);
+  }
+}
+
+/**
  * Admin "Entry title" (content-manager `mainField`) to enforce per content-type. The view
  * configuration lives in the database, not in code, so we set it at boot to have it applied on
  * every environment (including production) without manual steps in the admin.
@@ -110,6 +136,7 @@ export default {
    */
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await ensureAtletaPermissions({ strapi });
+    await ensureTipiTest({ strapi });
     await ensureEntryTitles({ strapi });
   },
 };

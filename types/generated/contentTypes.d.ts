@@ -712,6 +712,33 @@ export interface ApiTestFisicoTestFisico extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiTipoTestTipoTest extends Struct.CollectionTypeSchema {
+  collectionName: 'tipi_test';
+  info: {
+    description: 'Catalogo dei tipi di test fisico: nome, unit\u00E0 di misura e direzione di miglioramento.';
+    displayName: 'Tipo test';
+    pluralName: 'tipi-test';
+    singularName: 'tipo-test';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    codice: Schema.Attribute.UID<'nome'> & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    direzioneMigliora: Schema.Attribute.Enumeration<['su', 'giu']> & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::tipo-test.tipo-test'> &
+      Schema.Attribute.Private;
+    nome: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    unita: Schema.Attribute.Enumeration<['cm', 's', 'm']> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+  };
+}
+
 export interface ApiVideoCoachAtletaVideoCoachAtleta extends Struct.CollectionTypeSchema {
   collectionName: 'video_coach_atleti';
   info: {
@@ -1176,6 +1203,7 @@ declare module '@strapi/strapi' {
       'api::infortunio.infortunio': ApiInfortunioInfortunio;
       'api::piano-alimentare.piano-alimentare': ApiPianoAlimentarePianoAlimentare;
       'api::test-fisico.test-fisico': ApiTestFisicoTestFisico;
+      'api::tipo-test.tipo-test': ApiTipoTestTipoTest;
       'api::video-coach-atleta.video-coach-atleta': ApiVideoCoachAtletaVideoCoachAtleta;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
