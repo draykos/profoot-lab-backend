@@ -7,7 +7,7 @@ import { factories } from '@strapi/strapi';
 export default factories.createCoreService('api::atleta.atleta', ({ strapi }) => ({
   /**
    * Trova l'atleta collegato a uno user id, o `null` se non esiste. Punto unico riusato dagli
-   * endpoint `me` degli altri content-type privati per-atleta (allenamento, test-fisico,
+   * endpoint `me` degli altri content-type privati per-atleta (test-fisico,
    * infortunio, piano-alimentare, highlight, ...) per evitare di duplicare la query in ogni
    * controller.
    */

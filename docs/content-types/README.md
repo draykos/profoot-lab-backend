@@ -23,7 +23,7 @@ file.
 | --- | --- | --- | --- | --- | --- |
 | 1 | Atleta | [atleta.md](atleta.md) | collection | ✅ | `/profile`, header di ogni schermata, `/` |
 | 2 | ~~Squadra~~ | [squadra.md](squadra.md) | collection | ❌ rimosso | vedi nota² |
-| 3 | Allenamento | [allenamento.md](allenamento.md) | collection | ✅ | `/training`, `/` (video del giorno) |
+| 3 | ~~Allenamento~~ | [allenamento.md](allenamento.md) | collection | ❌ rimosso | vedi nota¹ |
 | 4 | Piano alimentare | [piano-alimentare.md](piano-alimentare.md) | collection | ✅ | `/diet`, `/` (riepilogo kcal) |
 | 5 | Test fisico | [test-fisico.md](test-fisico.md) | collection | ✅ | `/test` |
 | 6 | Infortunio | [infortunio.md](infortunio.md) | collection | ✅ | `/body`, `/` (alert corpo) |
@@ -31,12 +31,15 @@ file.
 | 8 | Video Coach | [video-coach.md](video-coach.md) | collection | ✅ | `/training`, `/` (video del giorno) — vedi nota¹ |
 | 9 | Highlight | [highlight.md](highlight.md) | collection | ✅ | `/highlights` |
 | 10 | Membro staff | [membro-staff.md](membro-staff.md) | collection | 📝 (opzionale) | `/training` (attribuzioni) |
+| 11 | Tipo test | [tipo-test.md](tipo-test.md) | collection | ✅ | `/test` (via `test-fisico`), pagina admin "Aggiungi Test Fisico" |
 
 ¹ **Nota 2026-09-14:** `/mental` (placeholder work-in-progress) non consuma più questa entità — i
 video di `video-coach` alimentano `/training`, la stessa route pianificata per `allenamento` (riga
 3). Le due entità coesistono con schemi diversi e nessuna delle due è stata rimossa; va deciso se
 consolidarle o tenerle separate (es. `video-coach` per il singolo video assegnato, `allenamento` per
 un piano più strutturato). Vedi `video-coach.md` → Changelog.
+**Chiusa il 2026-11-22:** `allenamento` rimosso (mai usato dal frontend), `/training` resta su
+`video-coach`.
 
 ² **Nota 2026-09-18:** `Squadra` rimosso — vedi `squadra.md` → Changelog. `atleta.squadra`,
 `partita.squadraCasa`/`squadraTrasferta` e `highlight.avversario` sono ora campi `string` liberi
@@ -212,3 +215,10 @@ read-only), salvo eccezioni annotate.
   ripetibile `coach.video` dentro un "Video Coach" per atleta (oneToOne), stesso schema di
   backoffice di `piano-alimentare` e `calendario-partite`. Draft & Publish rimosso. Tabella nuova
   `video_coach_atleti` (la vecchia `video_coach` viene eliminata). Vedi `video-coach.md`.
+- **2026-11-22** — creato `tipo-test` (`api::tipo-test.tipo-test`), catalogo dei tipi di test fisico
+  gestito dall'admin, con seed dei 6 tipi esistenti in `bootstrap()`.
+- **2026-11-22** — `test-fisico`: enum `tipo` sostituito dalla relazione `tipoTest` verso
+  `tipo-test`; `unita` e `direzioneMigliora` passano sul catalogo. Endpoint `me` aggiornato.
+- **2026-11-22** — **rimosso `allenamento`** (`api::allenamento.allenamento`): mai consumato dal
+  frontend, `/training` usa `video-coach`. Eliminati anche la relazione `atleta.allenamenti` e il
+  permesso `me` seedato. Vedi `allenamento.md`.
